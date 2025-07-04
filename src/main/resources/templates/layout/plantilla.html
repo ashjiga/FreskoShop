@@ -13,36 +13,39 @@
         <script th:src="@{/js/rutinas.js}"></script>
     </head>
     <body>
-    <header th:fragment="header" class="header">
-            <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
+        <header th:fragment="header" class="header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-2">
                 <div class="container">
-                    <a th:href="@{/}" class="navbar-brand">[[#{aplicacion.titulo}]]</a>
-                    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+
+                    <a th:href="@{/}" class="navbar-brand fw-bold fs-3">[[#{aplicacion.titulo}]]</a>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" 
+                            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" 
-                                   data-bs-toggle="dropdown" 
-                                   href="#" 
-                                   role="button" 
-                                   aria-expanded="false">[[#{plantilla.menu}]]</a>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><a class="dropdown-item" th:href="@{/carrito/listado}">[[#{plantilla.carrito}]]</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/producto/listado}">[[#{plantilla.productos}]]</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/usuario/listado}">[[#{plantilla.usuarios}]]</a></li>
-                                </ul>
+                        <ul class="navbar-nav align-items-center">
+                            <li class="nav-item">
+                                <a class="nav-link fs-5" th:href="@{/carrito/listado}">[[#{plantilla.carrito}]]</a>
                             </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link fs-5" th:href="@{/producto/listado}">[[#{plantilla.productos}]]</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link fs-5" th:href="@{/usuario/listado}">[[#{plantilla.usuarios}]]</a>
+                            </li>
+                            
                         </ul>
-
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     [[#{plantilla.idioma}]]
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-dark">
+                                
+                                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                                     <li><a class="dropdown-item" th:href="@{/(lang=es)}">ES</a></li>
                                     <li><a class="dropdown-item" th:href="@{/(lang=en)}">EN</a></li>
                                 </ul>
@@ -51,24 +54,16 @@
                     </div>
                 </div>
             </nav>
-
-            <section id="main-header" class="py-2 bg-primary bg-opacity-90 text-white">
-
+            <section id="main-header" class="py-3 bg-primary bg-opacity-90 text-white text-center">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h1><i class="fas fa-cog"></i> [[#{plantilla.suTienda}]]</h1>
-                        </div>
-                    </div>
+                    <h1><i class="fas fa-shopping-cart"></i>¡Tu supermercado fresco y confiable!</h1>
                 </div>
             </section>
         </header>
-
         <footer th:fragment="footer" class="bg-secondary text-white mt-5 p-2">
-
             <div class="container">
                 <div class="col">
-                    <p class="lead text-center">&COPY; [[#{plantilla.derechos}]]</p>
+                    <p class="lead text-center mb-0">&COPY; [[#{plantilla.derechos}]]</p>
                 </div>
             </div>
         </footer>
