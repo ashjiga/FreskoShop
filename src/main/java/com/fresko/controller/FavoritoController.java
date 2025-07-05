@@ -27,6 +27,7 @@ public class FavoritoController {
             var favoritos = favoritoService.getFavoritosPorUsuario(usuario);
             model.addAttribute("favoritos", favoritos);
         }
+        
         return "favorito/listado";
     }
 }
