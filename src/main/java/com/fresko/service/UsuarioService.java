@@ -10,4 +10,6 @@ public interface UsuarioService {
     Usuario getUsuarioPorUsername(String username);
 
     Usuario getUsuarioPorId(Long idUsuario);
+    
+    Usuario createUsuario(Usuario nuevoUsuario);
 }

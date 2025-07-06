@@ -103,7 +103,7 @@ CREATE TABLE request_matcher (
 CREATE TABLE request_matcher_all (
   id_request_matcher INT AUTO_INCREMENT PRIMARY KEY,
   pattern VARCHAR(255) NOT NULL
-);
+);id_rol
 
 -- Registro de intentos de login
 CREATE TABLE login_log (
@@ -112,4 +112,7 @@ CREATE TABLE login_log (
   fecha DATETIME NOT NULL,
   exito BOOLEAN,
   FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
-);
+);login_log
+
+ALTER TABLE usuario ADD rol VARCHAR(20) NOT NULL DEFAULT 'CLIENTE';
+

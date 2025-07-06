@@ -1,6 +1,6 @@
 package com.fresko.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.*;  
 import java.io.Serializable;
 
 @Entity
@@ -22,10 +22,11 @@ public class Usuario implements Serializable {
     @Column(name = "ruta_imagen")
     private String rutaImagen;
 
-    private boolean activo;
+    private Boolean activo;        
 
-    public Usuario() {
-    }
+    /* --- Campo de rol único ---  */
+    @Column(nullable = false, length = 20)
+    private String rol;               
 
     public Long getIdUsuario() {
         return idUsuario;
@@ -91,11 +92,21 @@ public class Usuario implements Serializable {
         this.rutaImagen = rutaImagen;
     }
 
-    public boolean isActivo() {
+    public Boolean getActivo() {
         return activo;
     }
 
-    public void setActivo(boolean activo) {
+    public void setActivo(Boolean activo) {
         this.activo = activo;
     }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+ 
 }
+
