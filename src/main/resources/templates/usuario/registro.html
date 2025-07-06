@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Registro</title>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
+
+        <div class="container mt-5 col-lg-6">
+            <h2 class="text-center mb-4">Crear cuenta</h2>
+
+            <form th:action="@{/auth/registro}" th:object="${usuarioForm}" method="post">
+                <!-- Usuario -->
+                <div class="mb-3">
+                    <label class="form-label">Nombre de usuario</label>
+                    <input th:field="*{username}" class="form-control" required/>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" th:field="*{password}" class="form-control" required/>
+                </div>
+
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input th:field="*{nombre}" class="form-control" required/>
+                </div>
+
+                <!-- Apellidos -->
+                <div class="mb-3">
+                    <label class="form-label">Apellidos</label>
+                    <input th:field="*{apellidos}" class="form-control" required/>
+                </div>
+
+                <!-- Correo -->
+                <div class="mb-3">
+                    <label class="form-label">Correo electrónico</label>
+                    <input type="email" th:field="*{correo}" class="form-control"/>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input th:field="*{telefono}" class="form-control"/>
+                </div>
+
+                <!-- Rol -->
+                <div class="mb-3">
+                    <label class="form-label">Tipo de cuenta</label>
+                    <select th:field="*{rol}" class="form-select">
+                        <option th:value="${'CLIENTE'}">Cliente</option>
+                        <option th:value="${'TRABAJADOR'}">Trabajador</option>
+                        <option th:value="${'ADMIN'}">Administrador</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+            </form>
+
+        </div>
+
+        <footer th:replace="~{layout/plantilla :: footer}"/>
+    </body>
+</html>
