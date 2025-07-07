@@ -1,6 +1,6 @@
 Hecho por Jose Lafuente 7/7/25
 
-=========================================================== Cambios y actializaciones =========================================================== 
+=========== Cambios y actializaciones ============= 
 
 Por aquello hay que hacerle una modificación a la DB hay que agregarle una columna mas a la tabla de Usuario si no da error a la hora de registrar un usuario
 
@@ -18,7 +18,7 @@ ALTER TABLE usuario ADD COLUMN rol VARCHAR(30);
 -Muchos cambios ya no me acuerdo.
 -Hay cambios en el penpot por si lo quieren ver hice unas prevews. MUY vagas de como se tendría que ver maso menos si quieren hacerlo de otra forma o se les hace mas sencillo acomodar algo de otro modo, nada mas hacerlo pero sin desfasarse mucho de como se ve el diseño. (Parece un FB de comida TBH)
 
-=========================================================== To DO. ===========================================================
+================= To DO. =================
 
 -El inicio de sesión no es obligatorio. Es nada mas para administradores (administrar usuarios CRUD) y para usuarios que quieren utilizar la herramienta de "Mi lista de favoritos" 
 
@@ -33,12 +33,12 @@ ALTER TABLE usuario ADD COLUMN rol VARCHAR(30);
 -Si inicias sesión como Administrador te debe de aparecer un botón a un lado del de cerrar sesión el cual te lleve a una lista tipo Crud en donde puedas eliminar usuarios ya sean trabajadores, administradores o clientes y que tengan las funcionalidades básicas de un crud vaya... jajaja 
 
 - A la  sección de mi carrito le hace falta un botón de volver al igual que mi lista. 
-=========================================================== Puntos a mejorar o errores ===========================================================
+=============== Puntos a mejorar o errores ==================
 -al registrarse solo se puede registrar como usuario no puede dar la opción de que cualquiera se pueda registrar como quiera solo un usuario administrador puede tener esa opción en el Crud
 
 - el cambio de idioma el botón no me funciona aun no entiendo el porque. 
 
 
-=====================================================================================================================================================
+==========================================
 
 Hay cosas que no se pueden hacer aun como lo del logotipo porq no lo eh subido pero si no se puede me dicen. PV!!!
