@@ -117,3 +117,38 @@ CREATE TABLE login_log (
 
 ALTER TABLE usuario ADD rol VARCHAR(20) NOT NULL DEFAULT 'CLIENTE';
 
+
+-- Querys para añadir informacion e imagenes importantes - RECALCO ES IMPORTANTE!!! jaja (hay imagenes de las secciones del index)
+USE fresko;
+
+
+INSERT INTO categoria (descripcion, ruta_imagen, activo) VALUES
+('Abarrotes', 'https://imgur.com/r1tPOdO', true),
+('Carnes', 'https://imgur.com/gBzuv9W', true),
+('Bebidas', 'https://imgur.com/ErAY1JK', true),
+('Limpieza', 'https://imgur.com/RBHK0qu', true),
+('Mascotas', 'https://imgur.com/MfTrJpy', true);
+
+INSERT INTO producto (id_categoria, descripcion, detalle, precio, existencias, ruta_imagen, activo) VALUES
+(1, 'Arroz 1kg', 'Arroz blanco empacado', 900, 100, 'https://walmartcr.vtexassets.com/arquivos/ids/610493-500-auto?v=638515680492000000&width=500&height=auto&aspect=true', true),
+(2, 'Pechuga de pollo', 'Fresca y sin hueso', 3500, 50, 'https://walmartcr.vtexassets.com/arquivos/ids/530578-1200-900?v=638419994116070000&width=1200&height=900&aspect=true', true),
+(3, 'Refresco de cola 2L', 'Bebida gaseosa sabor cola', 1200, 80, 'https://walmartcr.vtexassets.com/arquivos/ids/463812-500-auto?v=638328299978570000&width=500&height=auto&aspect=true', true),
+(4, 'Jabón líquido', 'Para limpieza de superficies', 1800, 60, 'https://walmartcr.vtexassets.com/arquivos/ids/753322-500-500?v=638655000591400000&width=500&height=auto&aspect=true', true),
+(5, 'Alimento para perro 3kg', 'Marca Canino Feliz', 7200, 40, 'https://walmartcr.vtexassets.com/arquivos/ids/893600-500-auto?v=638781696147970000&width=500&height=auto&aspect=true', true);
+
+-- Usuario con rol USER (puede agregar favoritos el pass de usuario1 es "usuario123")
+INSERT INTO usuario (username, password, nombre, apellidos, correo, telefono, ruta_imagen, activo, rol)
+VALUES ('usuario1', '$2a$10$wH3MeHf5czjcD82vJWfvS.1FNhI.3U9aFo8U0iEkGp5FfbKAdASuG', 'Carlos', 'Fernández', 'carlos@correo.com', '8888-8888', '/img/user1.png', true, 'ROLE_CLIENTE');
+
+-- Asignación de rol USER
+INSERT INTO rol (nombre, id_usuario) VALUES ('ROLE_USER', 1);
+
+INSERT INTO favorito (id_usuario, id_producto) VALUES
+(1, 1), -- Arroz
+(1, 3), -- Refresco
+(1, 5); -- Alimento perro
+
+
+
+
+

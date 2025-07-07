@@ -6,6 +6,62 @@
     </head>
     <body>
         <header th:replace="~{layout/plantilla :: header}"></header>
+        
+        
+        <!-- Categorías  -->
+        <div sec:authorize="isAuthenticated()" class="container-fluid py-3 menu-categorias mt-3">
+                <div class="d-flex justify-content-center gap-5 text-light text-center flex-wrap">
+                    <!-- Categoria: Abarrotes -->
+                    <a href="#" class="categoria-item">
+                        <div>
+                            <div class="categoria-icono">
+                                <img src="https://i.imgur.com/MuFVl7q.png" alt="Abarrotes" class="categoria-img">
+                            </div>
+                            <div class="mt-2" th:text="#{categoria.abarrotes}">Abarrotes</div>
+                        </div>
+                    </a>
+                    <!-- Categoria: Carnes -->
+                    <a href="#" class="categoria-item"> 
+                        <div>
+                            <div class="categoria-icono">
+                                <img src="https://i.imgur.com/KyRr3MZ.png" alt="Carnes" class="categoria-img">
+                            </div>
+                            <div class="mt-2" th:text="#{categoria.carnes}">Carnes</div>
+                        </div>
+                    </a>
+                    <!-- Categoria: Bebidas -->
+                    <a href="#" class="categoria-item">
+                        <div>
+                            <div class="categoria-icono">
+                                <img src="https://i.imgur.com/7UhsaOp.png" alt="Bebidas" class="categoria-img">
+                            </div>
+                            <div class="mt-2" th:text="#{categoria.bebidas}">Bebidas</div>
+                        </div>
+                    </a>
+                    <!-- Categoria: Limpieza -->
+                    <a href="#" class="categoria-item">
+                        <div>
+                            <div class="categoria-icono">
+                                <img src="https://i.imgur.com/dZwies6.png" alt="Limpieza" class="categoria-img">
+                            </div>
+                            <div class="mt-2" th:text="#{categoria.limpieza}">Limpieza</div>
+                        </div>
+                    </a>
+                    <!-- Categoria: Mascotas -->
+                    <a href="#" class="categoria-item">
+                        <div>
+                            <div class="categoria-icono"> 
+                                <img src="https://i.imgur.com/hcCeQEf.png" alt="Mascotas" class="categoria-img">
+                            </div>
+                            <div class="mt-2" th:text="#{categoria.mascotas}">Mascotas</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        
+        
+        
+        
         <footer th:replace="~{layout/plantilla :: footer}"></footer>
     </body>
 </html>
