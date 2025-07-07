@@ -41,7 +41,8 @@ CREATE TABLE usuario (
   correo VARCHAR(100),
   telefono VARCHAR(20),
   ruta_imagen VARCHAR(1024),
-  activo BOOLEAN
+  activo BOOLEAN,
+  rol VARCHAR(30)
 );
 
 -- Tabla de roles

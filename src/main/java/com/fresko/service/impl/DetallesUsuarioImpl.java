@@ -31,5 +31,7 @@ public class DetallesUsuarioImpl implements UserDetailsService {
                     new SimpleGrantedAuthority(usuario.getRol())   // ← lee la columna rol
                 )
         );
+        
+        
     }
 }
