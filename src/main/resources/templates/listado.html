@@ -40,6 +40,11 @@
         <div th:if="${carrito == null or carrito.isEmpty()}" class="alert alert-info text-center">
             [[#{carrito.vacio}]]
         </div>
+        <div class="text-center mt-4">
+            <a th:href="@{/}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+            </a>
+        </div>
     </div>
     <footer th:replace="~{layout/plantilla :: footer}"/>
 </body>
