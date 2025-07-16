@@ -17,6 +17,7 @@ ALTER TABLE usuario ADD COLUMN rol VARCHAR(30);
 -modifique el query en recursos del proyecto. con querys para llenar las tablas (hay unas que son importantes porfa no saltarselas). 
 -Muchos cambios ya no me acuerdo.
 -Hay cambios en el penpot por si lo quieren ver hice unas prevews. MUY vagas de como se tendría que ver maso menos si quieren hacerlo de otra forma o se les hace mas sencillo acomodar algo de otro modo, nada mas hacerlo pero sin desfasarse mucho de como se ve el diseño. (Parece un FB de comida TBH)
+
 -El boton de idioma ya funciona pero en la pantalla de login/sign up no deja cambiarlo
 
 ================= To DO. =================
