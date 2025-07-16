@@ -2,21 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/plantilla :: head}">
-    <title>Favoritos</title>
+    <title>[[#{plantilla.favoritos}]</title>
 </head>
 <body>
     <section th:fragment="listadoFavoritos">
         <div class="container mt-5">
-            <h2 class="mb-4 text-center">[[#{plantilla.lista}]]</h2>
+            <h2 class="mb-4 text-center">[[#{plantilla.mi.lista}]]</h2>
 
             <div class="row" th:if="${favoritos != null}">
                 <div class="col-md-4 mb-4" th:each="fav : ${favoritos}">
                     <div class="card h-100">
                         <img th:src="@{${fav.producto.rutaImagen}}" class="card-img-top" alt="..." height="200">
                         <div class="card-body">
-                            <h5 class="card-title" th:text="${fav.producto.descripcion}">Nombre</h5>
-                            <p class="card-text">₡<span th:text="${fav.producto.precio}">Precio</span></p>
-                            <p class="card-text" th:text="${fav.producto.detalle}">Detalle</p>
+                            <h5 class="card-title" th:text="${fav.producto.descripcion}">[[#{lista.columna.nombre}]]</h5>
+                            <p class="card-text">₡<span th:text="${fav.producto.precio}">[[#{lista.precio}]]</span></p>
+                            <p class="card-text" th:text="${fav.producto.detalle}">[[#{lista.detalle}]]</p>
                         </div>
                         <div class="card-footer d-flex justify-content-between">
                             <form th:action="@{/carrito/agregar}" method="post">
