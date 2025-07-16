@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head th:replace="~{layout/plantilla :: head}">
-        <title>Iniciar sesión</title>
+        <title>[[#{accion.iniciar.sesion}]]</title>
     </head>
     <body>
         <header th:replace="~{layout/plantilla :: header}"/>
 
         <div class="container mt-5 col-lg-4">
-            <h2 class="text-center mb-4">Iniciar sesión</h2>
+            <h2 class="text-center mb-4">[[#{accion.iniciar.sesion}]]</h2>
 
             <!-- Spring Security usará /login POST automáticamente -->
             <form th:action="@{/login}" method="post">
                 <div class="mb-3">
-                    <label class="form-label">Usuario</label>
+                    <label class="form-label">[[#{usuario.username}]]</label>
                     <input class="form-control" name="username" required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Contraseña</label>
+                    <label class="form-label">[[#{usuario.password}]]</label>
                     <input type="password" class="form-control" name="password" required>
                 </div>
 
-                <button class="btn btn-success w-100" type="submit">Entrar</button>
+                <button class="btn btn-success w-100" type="submit">[[#{accion.entrar}]]</button>
 
                 <!-- Mensajes -->
-                <div class="text-danger mt-2" th:if="${param.error}">Credenciales incorrectas</div>
-                <div class="text-success mt-2" th:if="${param.exito}">Registro exitoso. Inicia sesión.</div>
-                <div class="text-success mt-2" th:if="${param.logout}">Sesión finalizada.</div>
+                <div class="text-danger mt-2" th:if="${param.error}">[[#{login.error}]]</div>
+                <div class="text-success mt-2" th:if="${param.exito}">[[#{login.exito}]]</div>
+                <div class="text-success mt-2" th:if="${param.logout}">[[#{login.logout}]]</div>
             </form>
         </div>
-
+        </header>
         <footer th:replace="~{layout/plantilla :: footer}"/>
     </body>
 </html>
