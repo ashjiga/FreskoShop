@@ -194,7 +194,7 @@
                 <div>
                     <div th:if="${vistaFavoritos}">
                         <a class="btn btn-light ms-2" th:href="@{/}">
-                            <i class="bi bi-arrow-left"></i> Volver
+                            <i class="bi bi-arrow-left"></i> [[#{accion.regresar}]]
                         </a>
                     </div>
                 </div>
@@ -203,13 +203,13 @@
                 <div class="d-flex">
                     <!-- Mostrar SOLO cuando NO hay sesión -->
                     <div sec:authorize="!isAuthenticated()">
-                        <a class="btn btn-info" th:href="@{/auth/registro}" th:text="#{login.registro}">Registrarse</a>
-                        <a class="btn btn-light" th:href="@{/auth/login}" th:text="#{login.inicioS}">Iniciar sesion</a>
+                        <a class="btn btn-info" th:href="@{/auth/registro}" th:text="#{login.registro}">[[#{accion.registrarse}]]</a>
+                        <a class="btn btn-light" th:href="@{/auth/login}" th:text="#{login.inicioS}">[[#{accion.iniciar.sesion}]]</a>
                     </div>
 
                     <!-- Mostrar SOLO cuando SÍ hay sesión -->
                     <div sec:authorize="isAuthenticated()">
-                        <a class="btn btn-light ms-2" th:href="@{/logout}" th:text="#{login.CerrarS}">Cerrar sesión</a>
+                        <a class="btn btn-light ms-2" th:href="@{/logout}" th:text="#{login.CerrarS}">[[#{accion.cerrar.sesion}]]</a>
                     </div>
                 </div>
             </div>
@@ -219,7 +219,7 @@
 
                 <!-- Botón Mi Carrito a la izquierda -->
                 <a class="btn btn-dark" th:href="@{/carrito/listado}" style="background-color: #004d66; border-color: #004d66; color: white;">
-                    <i class="bi bi-cart"></i> Mi Carrito
+                    <i class="bi bi-cart"></i> [[#{plantilla.mi.carrito}]]
                 </a>
 
                 <!-- Input de búsqueda -->
@@ -231,7 +231,7 @@
                 <!-- Botones del lado derecho -->
                 <div class="d-flex align-items-center">
                     <a class="btn btn-dark me-2" th:unless="${vistaFavoritos}" th:href="@{/favorito/listado}" style="background-color: #004d66; border-color: #004d66; color: white;">
-                        <i class="bi bi-heart"></i> Mi Lista
+                        <i class="bi bi-heart"></i> [[#{plantilla.mi.lista}]]
                     </a>
                 </div>
             </div>
