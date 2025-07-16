@@ -1,62 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head th:replace="~{layout/plantilla :: head}">
-        <title>Registro</title>
+        <title>[[#{accion.registrarse}]]</title>
     </head>
     <body>
         <header th:replace="~{layout/plantilla :: header}"/>
 
         <div class="container mt-5 col-lg-6">
-            <h2 class="text-center mb-4">Crear cuenta</h2>
+            <h2 class="text-center mb-4">[[#{usuario.agregar}]]</h2>
 
             <form th:action="@{/auth/registro}" th:object="${usuarioForm}" method="post">
                 <!-- Usuario -->
                 <div class="mb-3">
-                    <label class="form-label">Nombre de usuario</label>
+                    <label class="form-label">[[#{usuario.username}]]</label>
                     <input th:field="*{username}" class="form-control" required/>
                 </div>
 
                 <!-- Contraseña -->
                 <div class="mb-3">
-                    <label class="form-label">Contraseña</label>
+                    <label class="form-label">[[#{usuario.password}]]</label>
                     <input type="password" th:field="*{password}" class="form-control" required/>
                 </div>
 
                 <!-- Nombre -->
                 <div class="mb-3">
-                    <label class="form-label">Nombre</label>
+                    <label class="form-label">[[#{usuario.nombre}]]</label>
                     <input th:field="*{nombre}" class="form-control" required/>
                 </div>
 
                 <!-- Apellidos -->
                 <div class="mb-3">
-                    <label class="form-label">Apellidos</label>
+                    <label class="form-label">[[#{usuario.apellidos}]]</label>
                     <input th:field="*{apellidos}" class="form-control" required/>
                 </div>
 
                 <!-- Correo -->
                 <div class="mb-3">
-                    <label class="form-label">Correo electrónico</label>
+                    <label class="form-label">[[#{usuario.correo}]]</label>
                     <input type="email" th:field="*{correo}" class="form-control"/>
                 </div>
 
                 <!-- Teléfono -->
                 <div class="mb-3">
-                    <label class="form-label">Teléfono</label>
+                    <label class="form-label">[[#{usuario.telefono}]]</label>
                     <input th:field="*{telefono}" class="form-control"/>
                 </div>
 
                 <!-- Rol -->
                 <div class="mb-3">
-                    <label class="form-label">Tipo de cuenta</label>
+                    <label class="form-label">[[#{accion.tipo.cuenta}]]</label>
                     <select th:field="*{rol}" class="form-select">
-                        <option th:value="${'CLIENTE'}">Cliente</option>
-                        <option th:value="${'TRABAJADOR'}">Trabajador</option>
-                        <option th:value="${'ADMIN'}">Administrador</option>
+                        <option th:value="${'CLIENTE'}">[[#{cuenta.cliente}]]</option>
+                        <option th:value="${'TRABAJADOR'}">[[#{cuenta.trabajador}]]</option>
+                        <option th:value="${'ADMIN'}">[[#{cuenta.admin}]]</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+                <button type="submit" class="btn btn-primary w-100">[[#{accion.registrarse}]]</button>
             </form>
 
         </div>
