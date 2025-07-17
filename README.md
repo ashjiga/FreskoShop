@@ -1,45 +1,57 @@
-Hecho por Jose Lafuente 17/7/25
+# Proyecto Fresko 
 
-=========== Cambios y actializaciones ============= 
+---
 
--El boton de idioma ya funciona pero en la pantalla de login/sign up no deja cambiarlo
+**Hecho por:** Jose Lafuente (17 de julio de 2025)
 
-================= To DO. =================
+---
 
-PRIORIDAD: ALTA+++
--Crear el crud para trabajador y Administrador para ingresar PRODUCTOS
--Crear funcionalidad del carrito. que puedas comprar y facturar etc...
--Para hacer una compra no necesitas ser un usuario, un carrito lo puede hacer cualquier persona sin iniciar sesión.
--En el index deben de aparecer todos los productos, si quiere ver los productos específicos se tiene que seleccionar alguna de las 5 secciones que hay.
- en pocas palabras que cuando selecciones una sección especifica filtre solo los productos con el id y las muestre en una dirección aparte ej localhost/abarrotes
+## Cambios y Actualizaciones
 
-PRIORIDAD: MEDIA++
--si se intenta usar el favoritos sin estar logeado tiene que pedir logearse mostrando un mensaje emergente. 
--reemplazar la barra de búsqueda en el crud  del botón "Ver Usuario" para poder buscar un usuario.
+-   El botón de idioma ya funciona, pero no permite cambiar el idioma en las pantallas de inicio de sesión/registro.
 
-PRIORIDAD: BAJA+
--modificar el texto de "Fresko por un png con el logotipo de la marca. Esta en mi imgur solo es de hacer el cambio por el link"
--solucionar error de boton lenguaje en el log in. (aun no encuentro el error)
+---
 
-=============== Puntos a mejorar o errores ==================
+## Tareas Pendientes (TO-DO)
 
--error actual persistente. a la hora de hacer un pull en NetBeans el message.properties al parecer se corrompe. fijarse en: click derecho en el proyecto/properties/sources/"abajo en esta pestaña que el encoding sea UTF-8" ok y guardar. 
-al parecer no entiendo por que se corrompen y no se muestran las tildes y algunas cosas de los .properties de forma adecuada. el error creo que soy yo pero no estoy seguro, no lo entiendo. si alguien encuentra solución pls informarme.
+### Prioridad: ALTA +++
 
- 
--A la sección de mi carrito le hace falta un botón de volver al igual que mi lista. 
-un usuario administrador puede tener esa opción en el Crud
--el cambio de idioma el botón no me funciona aun no entiendo el porque.
+-   **CRUD de Productos:** Crear la funcionalidad CRUD (Crear, Leer, Actualizar, Eliminar) para que los trabajadores y administradores puedan gestionar productos.
+-   **Funcionalidad del Carrito:** Implementar la lógica completa del carrito de compras, incluyendo la capacidad de comprar y facturar.
+    -   No es necesario ser un usuario registrado para realizar una compra; cualquier persona puede usar el carrito sin iniciar sesión.
+-   **Visualización de Productos en el Index:** Mostrar todos los productos en la página principal (`index`).
+-   **Filtrado por Categoría:** Al seleccionar una de las 5 secciones (categorías), se deben filtrar y mostrar solo los productos de esa categoría en una URL específica (ej. `localhost/abarrotes`).
 
-==========================================
+### Prioridad: MEDIA ++
 
-hecho 17/7/25 WIP por ALF
--nuevo html listado.html en templates/usuario
--actualice como se registraban los usuarios, administradores, y trabajadores ahora es ROLE_XXXX 
--ahora un administrador puede tener acceso a el crud para ver usuarios y a las funcionalidades del crud WIP... solo se puede eliminar por el momento
--no es necesario iniciar sesión para utilizar la pagina (medio hecho hay que actualizar funcionalidades carrito mas que nada)
--mi lista de favoritos solo funciona con usuarios registrados (desaparece el boton)
--solo un admin puede crear usuarios admin y trabajador si se registra de manera normal se registra un ROLE_CLIENT (si quieren usar cosas de privilegio admin inyectar en el SQL o actualizar un user con ROLE_ADMIN)
--actualización de los messages.properties 
+-   **Acceso a Favoritos:** Si un usuario intenta usar la función de "Favoritos" sin estar logueado, se debe mostrar un mensaje emergente solicitando el inicio de sesión.
+-   **Búsqueda de Usuarios en CRUD:** Reemplazar la barra de búsqueda en el CRUD del botón "Ver Usuario" para permitir la búsqueda de usuarios específicos.
 
-Hay cosas que no se pueden hacer aun como lo del logotipo porq no lo eh subido pero si no se puede hacer algo mas avisar en el grupo para ver como lo solucionamos en equipo. PV!!!
+### Prioridad: BAJA +
+
+-   **Logotipo de Fresko:** Reemplazar el texto "Fresko" con el logotipo de la marca (disponible en Imgur). Solo se requiere el cambio del enlace de la imagen.
+-   **Error del Botón de Idioma en Login:** Solucionar el error que impide el funcionamiento del botón de idioma en la página de inicio de sesión. (El error aún no se ha identificado).
+
+---
+
+## Puntos a Mejorar o Errores Conocidos
+
+-   **Error persistente: Corrupción de `messages.properties` en NetBeans:**
+    -   **Problema:** Al realizar un "pull" en NetBeans, el archivo `messages.properties` parece corromperse, mostrando tildes y otros caracteres de forma incorrecta.
+    -   **Posible Solución Temporal:** Asegúrate de que la codificación de fuentes en la configuración del proyecto sea **UTF-8**. Puedes verificarlo en `Clic derecho en el proyecto > Properties > Sources > Encoding: UTF-8`.
+    -   **Incertidumbre:** Aún no se comprende la causa raíz de por qué se corrompen estos archivos. Si alguien encuentra una solución definitiva, por favor informar.
+
+-   **Falta de Botones "Volver":** Las secciones "Mi Carrito" y "Mi Lista" necesitan un botón para volver a la página anterior.
+-   **Opciones de CRUD para Administrador:** Un usuario administrador debería tener opciones de edición completas en el CRUD (actualmente solo se puede eliminar).
+-   **Funcionamiento del Botón de Cambio de Idioma:** El botón de cambio de idioma sigue sin funcionar correctamente; la razón aún no se ha determinado.
+
+---
+
+## Actualizaciones Recientes (17 de julio de 2025 - WIP por ALF)
+
+-   **`listado.html`:** Se añadió un nuevo archivo `listado.html` en `templates/usuario`.
+-   **Registro de Usuarios:** Se actualizó la forma en que se registran los usuarios, administradores y trabajadores. Ahora utilizan el formato `ROLE_XXXX` (ej. `ROLE_ADMIN`, `ROLE_WORKER`).
+-   **Funcionalidades de Administrador (CRUD):** Los administradores ahora tienen acceso al CRUD para ver usuarios y algunas funcionalidades (por el momento, solo se puede eliminar).
+-   **Acceso a la Página sin Iniciar Sesión:** Ya no es estrictamente necesario iniciar sesión para utilizar la página (esto está a medio hacer, principalmente requiere la actualización de las funcionalidades del carrito).
+-   **Lista de Favoritos:** La función "Mi lista de favoritos" solo está disponible para usuarios registrados (el botón desaparece si no hay sesión iniciada).
+-   **Creación de Usuarios por Administrador:** Solo un administrador puede crear usuarios con roles de `ADMIN` y `WORKER`. Si un usuario se registra de forma normal, se registra como `ROLE_CLIENT`. Para asignar privilegios de administrador, es necesario inyectar el rol en SQL o actualizar el usuario existente a `ROLE_ADMIN`.
