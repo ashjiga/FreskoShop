@@ -208,14 +208,26 @@
                     </div>
 
                     <!-- Mostrar SOLO cuando SÍ hay sesión -->
-                    <div sec:authorize="isAuthenticated()">
-                        <a class="btn btn-light ms-2" th:href="@{/logout}" th:text="#{login.CerrarS}">[[#{accion.cerrar.sesion}]]</a>
-                    </div>
+                   <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
+    
+    <!-- Botón solo para administradores -->
+    <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')">
+        <a class="btn btn-primary ms-2" th:href="@{/usuario/listado}">
+            <i class="fas fa-users"></i> [[#{admin.ver.usuarios}]]
+        </a>
+    </div>
+
+    <!-- Botón cerrar sesión -->
+    <form th:action="@{/logout}" method="post" class="ms-2" style="display:inline;">
+        <button type="submit" class="btn btn-light" th:text="#{login.CerrarS}">[[#{accion.cerrar.sesion}]]</button>
+    </form>
+</div>
+    
                 </div>
             </div>
 
-            <!-- Búsqueda y accesos SOLO cuando hay sesión -->
-            <div sec:authorize="isAuthenticated()" class="container-fluid py-3 d-flex justify-content-between align-items-center seccion-busqueda">
+
+            <div  class="container-fluid py-3 d-flex justify-content-between align-items-center seccion-busqueda">
 
                 <!-- Botón Mi Carrito a la izquierda -->
                 <a class="btn btn-dark" th:href="@{/carrito/listado}" style="background-color: #004d66; border-color: #004d66; color: white;">
@@ -229,7 +241,7 @@
                 </div>
 
                 <!-- Botones del lado derecho -->
-                <div class="d-flex align-items-center">
+                <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
                     <a class="btn btn-dark me-2" th:unless="${vistaFavoritos}" th:href="@{/favorito/listado}" style="background-color: #004d66; border-color: #004d66; color: white;">
                         <i class="bi bi-heart"></i> [[#{plantilla.mi.lista}]]
                     </a>

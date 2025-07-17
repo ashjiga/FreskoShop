@@ -27,24 +27,29 @@ public class ConfiguracionSeguridad {
     }
 
     @Bean
-    public SecurityFilterChain filtro(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authenticationProvider(authProvider(null)) 
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                .requestMatchers("/trabajador/**").hasAnyAuthority("TRABAJADOR", "ADMIN")
-                .requestMatchers("/cliente/**").hasAnyAuthority("CLIENTE", "ADMIN")
-                .anyRequest().authenticated()
-            )
-            .formLogin(f -> f
+                .authorizeHttpRequests((requests) -> requests
+                // Rutas públicas
+                .requestMatchers("/", "/index", "/css/**", "/js/**", "/img/**", "/productos/**", "/usuario/**", "/registro/**").permitAll()
+                // Rutas protegidas
+                .requestMatchers("/favoritos/**").authenticated()
+                .anyRequest().permitAll()
+                )
+                .formLogin((form) -> form
                 .loginPage("/auth/login")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/", true)
+                .loginProcessingUrl("/login") 
+                .defaultSuccessUrl("/", true) 
                 .permitAll()
-            )
-            .logout(l -> l.logoutSuccessUrl("/auth/login?logout").permitAll())
-            .csrf(c -> c.disable());
+                )
+                .logout((logout) -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .permitAll()
+                );
+
         return http.build();
     }
+
+
 }

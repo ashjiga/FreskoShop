@@ -14,6 +14,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private UsuarioDao usuarioDao;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public Usuario getUsuarioPorUsername(String username) {
         return usuarioDao.findByUsername(username);
@@ -29,19 +32,41 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioDao.findAll();
     }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+ @Override
+public Usuario createUsuario(Usuario nuevoUsuario) {
+    if (usuarioDao.existsByUsername(nuevoUsuario.getUsername())) {
+        throw new IllegalArgumentException("El nombre de usuario ya existe.");
+    }
+    nuevoUsuario.setPassword(passwordEncoder.encode(nuevoUsuario.getPassword()));
+    nuevoUsuario.setActivo(true);
 
-    @Override
-    public Usuario createUsuario(Usuario nuevoUsuario) {
-        if (usuarioDao.existsByUsername(nuevoUsuario.getUsername())) {
-            throw new IllegalArgumentException("El nombre de usuario ya existe.");
-        }
-
-        nuevoUsuario.setPassword(passwordEncoder.encode(nuevoUsuario.getPassword()));
-
-        nuevoUsuario.setActivo(true);
-        return usuarioDao.save(nuevoUsuario);
+    if (!nuevoUsuario.getRol().startsWith("ROLE_")) {
+        nuevoUsuario.setRol("ROLE_" + nuevoUsuario.getRol());
     }
 
+    return usuarioDao.save(nuevoUsuario);
+}
+
+    @Override
+    public void guardarUsuario(Usuario usuario) {
+        if (!usuario.getPassword().startsWith("$2a")) {
+            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        }
+        usuarioDao.save(usuario);
+    }
+
+    @Override
+    public Usuario getUsuario(Usuario usuario) {
+        return usuarioDao.findById(usuario.getIdUsuario()).orElse(null);
+    }
+
+    @Override
+    public void eliminarUsuario(Usuario usuario) {
+        usuarioDao.delete(usuario);
+    }
+    
+    @Override
+    public void eliminarUsuario(Long idUsuario) {
+        usuarioDao.deleteById(idUsuario);
+    }
 }

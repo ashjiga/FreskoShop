@@ -27,6 +27,16 @@ public class AuthController {
     /* ---------------- Procesar registro ---------------- */
     @PostMapping("/registro")
     public String guardar(@ModelAttribute("usuarioForm") Usuario usuarioForm) {
+        // Validar si ya existe el username
+        if (usuarioService.getUsuarioPorUsername(usuarioForm.getUsername()) != null) {
+            return "redirect:/auth/registro?error=usuario";
+        }
+
+        // Asegurar que el rol tenga el prefijo ROLE_
+        if (!usuarioForm.getRol().startsWith("ROLE_")) {
+            usuarioForm.setRol("ROLE_" + usuarioForm.getRol());
+        }
+
         usuarioService.createUsuario(usuarioForm);       
         return "redirect:/auth/login?exito";              
     }
