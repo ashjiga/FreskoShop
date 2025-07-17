@@ -19,7 +19,7 @@ PRIORIDAD: MEDIA++
 
 PRIORIDAD: BAJA+
 -modificar el texto de "Fresko por un png con el logotipo de la marca. Esta en mi imgur solo es de hacer el cambio por el link"
--solucionar error de boton lenguaje en el log in. (aun no encontro el error)
+-solucionar error de boton lenguaje en el log in. (aun no encuentro el error)
 
 =============== Puntos a mejorar o errores ==================
 
