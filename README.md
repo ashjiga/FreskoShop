@@ -18,7 +18,6 @@
 
 -   **CRUD de Productos:** Crear la funcionalidad CRUD (Crear, Leer, Actualizar, Eliminar) para que los trabajadores y administradores puedan gestionar productos.
 -   **Funcionalidad del Carrito:** Implementar la lógica completa del carrito de compras, incluyendo la capacidad de comprar y facturar.
-    -   No es necesario ser un usuario registrado para realizar una compra; cualquier persona puede usar el carrito sin iniciar sesión.
 -   **Visualización de Productos en el Index:** Mostrar todos los productos en la página principal (`index`).
 -   **Filtrado por Categoría:** Al seleccionar una de las 5 secciones (categorías), se deben filtrar y mostrar solo los productos de esa categoría en una URL específica (ej. `localhost/abarrotes`).
 
