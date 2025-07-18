@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>[[#{accion.registrarse}]]</title>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
+
+        <div class="container mt-5 col-lg-6">
+            <h2 class="text-center mb-4">[[#{usuario.agregar}]]</h2>
+
+            <!-- Mensaje si el usuario ya existe -->
+            <div class="alert alert-danger text-center" th:if="${param.error} == 'usuario'">
+                [[#{registro.mensaje.usuario.yaExiste}]]
+            </div>
+            
+            <form th:action="@{/auth/registro}" th:object="${usuarioForm}" method="post">
+                <!-- Usuario -->
+                <div class="mb-3">
+                    <label class="form-label">[[#{usuario.username}]]</label>
+                    <input th:field="*{username}" class="form-control" required/>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-3">
+                    <label class="form-label">[[#{usuario.password}]]</label>
+                    <input type="password" th:field="*{password}" class="form-control" required/>
+                </div>
+
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label class="form-label">[[#{usuario.nombre}]]</label>
+                    <input th:field="*{nombre}" class="form-control" required/>
+                </div>
+
+                <!-- Apellidos -->
+                <div class="mb-3">
+                    <label class="form-label">[[#{usuario.apellidos}]]</label>
+                    <input th:field="*{apellidos}" class="form-control" required/>
+                </div>
+
+                <!-- Correo -->
+                <div class="mb-3">
+                    <label class="form-label">[[#{usuario.correo}]]</label>
+                    <input type="email" th:field="*{correo}" class="form-control"/>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="mb-3">
+                    <label class="form-label">[[#{usuario.telefono}]]</label>
+                    <input th:field="*{telefono}" class="form-control"/>
+                </div>
+
+                <!-- Rol oculto para registros públicos -->
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <label class="form-label">[[#{accion.tipo.cuenta}]]</label>
+                    <select th:field="*{rol}" class="form-select">
+                        <option value="ROLE_CLIENTE">[[#{cuenta.cliente}]]</option>
+                        <option value="ROLE_TRABAJADOR">[[#{cuenta.trabajador}]]</option>
+                        <option value="ROLE_ADMIN">[[#{cuenta.admin}]]</option>
+                    </select>
+                </div>
+ 
+                <button type="submit" class="btn btn-primary w-100">[[#{accion.registrarse}]]</button>
+            </form>
+
+        </div>
+
+        <footer th:replace="~{layout/plantilla :: footer}"/>
+    </body>
+</html>

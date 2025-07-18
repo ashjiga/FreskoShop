@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Fresko</title>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}">
+            <nav class="nav justify-content-center my-3">
+                <a class="nav-link" href="/">Todos</a>
+                <a class="nav-link" href="/abarrotes">Abarrotes</a>
+                <a class="nav-link" href="/carnes">Carnes</a>
+                <a class="nav-link" href="/bebidas">Bebidas</a>
+                <a class="nav-link" href="/limpieza">Limpieza</a>
+                <a class="nav-link" href="/mascotas">Mascotas</a>
+            </nav>
+        </header>
+
+        <!-- Categorías -->
+        <div class="container-fluid py-3 menu-categorias mt-3">
+            <div class="d-flex justify-content-center gap-5 text-light text-center flex-wrap">
+
+                <a th:href="@{/abarrotes}" class="categoria-item">
+                    <div>
+                        <div class="categoria-icono">
+                            <img src="https://i.imgur.com/MuFVl7q.png" alt="Abarrotes" class="categoria-img">
+                        </div>
+                        <div class="mt-2" th:text="#{categoria.abarrotes}">Abarrotes</div>
+                    </div>
+                </a>
+
+                <a th:href="@{/carnes}" class="categoria-item"> 
+                    <div>
+                        <div class="categoria-icono">
+                            <img src="https://i.imgur.com/KyRr3MZ.png" alt="Carnes" class="categoria-img">
+                        </div>
+                        <div class="mt-2" th:text="#{categoria.carnes}">Carnes</div>
+                    </div>
+                </a>                
+
+                <a th:href="@{/bebidas}" class="categoria-item">
+                    <div>
+                        <div class="categoria-icono">
+                            <img src="https://i.imgur.com/7UhsaOp.png" alt="Bebidas" class="categoria-img">
+                        </div>
+                        <div class="mt-2" th:text="#{categoria.bebidas}">Bebidas</div>
+                    </div>
+                </a>
+
+                <a th:href="@{/limpieza}" class="categoria-item">
+                    <div>
+                        <div class="categoria-icono">
+                            <img src="https://i.imgur.com/dZwies6.png" alt="Limpieza" class="categoria-img">
+                        </div>
+                        <div class="mt-2" th:text="#{categoria.limpieza}">Limpieza</div>
+                    </div>
+                </a>
+
+                <a th:href="@{/mascotas}" class="categoria-item">
+                    <div>
+                        <div class="categoria-icono"> 
+                            <img src="https://i.imgur.com/hcCeQEf.png" alt="Mascotas" class="categoria-img">
+                        </div>
+                        <div class="mt-2" th:text="#{categoria.mascotas}">Mascotas</div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- Visualización de Productos -->
+        <div class="container mt-5">
+            <h2 class="text-center mb-4">Productos disponibles</h2>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col" th:each="producto : ${productos}">
+                    <!-- Enlace a la página de detalle del producto -->
+                    <a th:href="@{/producto/{id}(id=${producto.idProducto})}" style="text-decoration: none; color: inherit;">
+                        <div class="card h-100">
+                            <img th:src="${producto.rutaImagen}" class="card-img-top imagen-producto" alt="Imagen del producto">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${producto.descripcion}">Nombre</h5>
+                                    <p class="card-text" th:text="'₡' + ${producto.precio}">Precio</p>
+                                    <p class="card-text" th:text="${producto.existencias} + ' unidades disponibles'">Existencias</p>
+                                </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{layout/plantilla :: footer}"></footer>
+    </body>
+</html>

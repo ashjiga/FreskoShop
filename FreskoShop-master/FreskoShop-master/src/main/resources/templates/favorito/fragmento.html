@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>[[#{plantilla.favoritos}]</title>
+</head>
+<body>
+    <section th:fragment="listadoFavoritos">
+        <div class="container mt-5">
+            <h2 class="mb-4 text-center">[[#{plantilla.mi.lista}]]</h2>
+
+            <div class="row" th:if="${favoritos != null}">
+                <div class="col-md-4 mb-4" th:each="fav : ${favoritos}">
+                    <div class="card h-100">
+                        <img th:src="@{${fav.producto.rutaImagen}}" class="card-img-top" alt="..." height="200">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${fav.producto.descripcion}">[[#{lista.columna.nombre}]]</h5>
+                            <p class="card-text">₡<span th:text="${fav.producto.precio}">[[#{lista.precio}]]</span></p>
+                            <p class="card-text" th:text="${fav.producto.detalle}">[[#{lista.detalle}]]</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <form th:action="@{/carrito/agregar}" method="post">
+                                <input type="hidden" name="idProducto" th:value="${fav.producto.idProducto}" />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-cart-plus"></i> [[#{carrito.agregar}]]
+                                </button>
+                            </form>
+                            <a th:href="@{'/favorito/eliminar/' + ${fav.producto.idProducto}}" class="btn btn-danger">
+                                <i class="fas fa-heart-broken"></i> [[#{accion.eliminar}]]
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info text-center" th:if="${favoritos == null or favoritos.isEmpty()}">
+                [[#{lista.sin_elementos}]]
+            </div>
+        </div>
+    </section>
+</body>
+</html>
