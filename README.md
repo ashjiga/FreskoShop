@@ -1,45 +1,56 @@
-Hecho por Jose Lafuente 7/7/25
+# Proyecto Fresko 
 
-=========== Cambios y actializaciones ============= 
+---
 
-Por aquello hay que hacerle una modificación a la DB hay que agregarle una columna mas a la tabla de Usuario si no da error a la hora de registrar un usuario
+**Hecho por:** Jose Lafuente (17 de julio de 2025)
 
-solo abran el workbench y agregen estas líneas y la ejecutan debería de funcionar.
+---
 
-USE fresko;
-ALTER TABLE usuario ADD COLUMN rol VARCHAR(30);
+## Cambios y Actualizaciones
 
-(modifique el fresco sql que esta dentro del proyecto por si quieren hacerlo desde cero con este cambio)
+-   El botón de idioma ya funciona, pero no permite cambiar el idioma en las pantallas de inicio de sesión/registro.
 
--Cambio del aspecto grafico en general.
--modifique el index 
--modifique los message properties muchas veces que cansado con eso...
--modifique el query en recursos del proyecto. con querys para llenar las tablas (hay unas que son importantes porfa no saltarselas). 
--Muchos cambios ya no me acuerdo.
--Hay cambios en el penpot por si lo quieren ver hice unas prevews. MUY vagas de como se tendría que ver maso menos si quieren hacerlo de otra forma o se les hace mas sencillo acomodar algo de otro modo, nada mas hacerlo pero sin desfasarse mucho de como se ve el diseño. (Parece un FB de comida TBH)
+---
 
--El boton de idioma ya funciona pero en la pantalla de login/sign up no deja cambiarlo
+## Tareas Pendientes (TO-DO)
 
-================= To DO. =================
+### Prioridad: ALTA +++
 
--El inicio de sesión no es obligatorio. Es nada mas para administradores (administrar usuarios CRUD) y para usuarios que quieren utilizar la herramienta de "Mi lista de favoritos" 
+-   **CRUD de Productos:** Crear la funcionalidad CRUD (Crear, Leer, Actualizar, Eliminar) para que los trabajadores y administradores puedan gestionar productos.
+-   **Funcionalidad del Carrito:** Implementar la lógica completa del carrito de compras, incluyendo la capacidad de comprar y facturar.
+-   **Visualización de Productos en el Index:** Mostrar todos los productos en la página principal (`index`).
+-   **Filtrado por Categoría:** Al seleccionar una de las 5 secciones (categorías), se deben filtrar y mostrar solo los productos de esa categoría en una URL específica (ej. `localhost/abarrotes`).
 
--si se intenta usar el favoritos sin estar logeado tiene que pedir logearse. (creo que hay que modificar un poco el SQL para esto y para el punto superior también por como esta funcionando en este momento el comprar. Segun la logica del crud)
+### Prioridad: MEDIA ++
 
--Para hacer una compra no necesitas ser un usuario, un carrito lo puede hacer cualquier persona sin iniciar sesión. 
+-   **Acceso a Favoritos:** Si un usuario intenta usar la función de "Favoritos" sin estar logueado, se debe mostrar un mensaje emergente solicitando el inicio de sesión.
+-   **Búsqueda de Usuarios en CRUD:** Reemplazar la barra de búsqueda en el CRUD del botón "Ver Usuario" para permitir la búsqueda de usuarios específicos.
 
--en el index deben de aparecer todos los productos, si quiere ver los productos se tiene que seleccionar alguna de las 5 secciones que hay. 
+### Prioridad: BAJA +
 
--modificar el texto de "Fresko por un png  con el logotipo de la marca. Esta en  mi imgur solo es de hacer el cambio por el link"
+-   **Logotipo de Fresko:** Reemplazar el texto "Fresko" con el logotipo de la marca (disponible en Imgur). Solo se requiere el cambio del enlace de la imagen.
+-   **Error del Botón de Idioma en Login:** Solucionar el error que impide el funcionamiento del botón de idioma en la página de inicio de sesión. (El error aún no se ha identificado).
 
--Si inicias sesión como Administrador te debe de aparecer un botón a un lado del de cerrar sesión el cual te lleve a una lista tipo Crud en donde puedas eliminar usuarios ya sean trabajadores, administradores o clientes y que tengan las funcionalidades básicas de un crud vaya... jajaja 
+---
 
-- A la  sección de mi carrito le hace falta un botón de volver al igual que mi lista. 
-=============== Puntos a mejorar o errores ==================
--al registrarse solo se puede registrar como usuario no puede dar la opción de que cualquiera se pueda registrar como quiera solo un usuario administrador puede tener esa opción en el Crud
+## Puntos a Mejorar o Errores Conocidos
 
+-   **Error persistente: Corrupción de `messages.properties` en NetBeans:**
+    -   **Problema:** Al realizar un "pull" en NetBeans, el archivo `messages.properties` parece corromperse, mostrando tildes y otros caracteres de forma incorrecta.
+    -   **Posible Solución Temporal:** Asegúrate de que la codificación de fuentes en la configuración del proyecto sea **UTF-8**. Puedes verificarlo en `Clic derecho en el proyecto > Properties > Sources > Encoding: UTF-8`.
+    -   **Incertidumbre:** Aún no se comprende la causa raíz de por qué se corrompen estos archivos. Si alguien encuentra una solución definitiva, por favor informar.
 
+-   **Falta de Botones "Volver":** Las secciones "Mi Carrito" y "Mi Lista" necesitan un botón para volver a la página anterior.
+-   **Opciones de CRUD para Administrador:** Un usuario administrador debería tener opciones de edición completas en el CRUD (actualmente solo se puede eliminar).
+-   **Funcionamiento del Botón de Cambio de Idioma:** El botón de cambio de idioma sigue sin funcionar correctamente; la razón aún no se ha determinado.
 
-==========================================
+---
 
-Hay cosas que no se pueden hacer aun como lo del logotipo porq no lo eh subido pero si no se puede me dicen. PV!!!
+## Actualizaciones Recientes (17 de julio de 2025 - WIP por ALF)
+
+-   **`listado.html`:** Se añadió un nuevo archivo `listado.html` en `templates/usuario`.
+-   **Registro de Usuarios:** Se actualizó la forma en que se registran los usuarios, administradores y trabajadores. Ahora utilizan el formato `ROLE_XXXX` (ej. `ROLE_ADMIN`, `ROLE_WORKER`).
+-   **Funcionalidades de Administrador (CRUD):** Los administradores ahora tienen acceso al CRUD para ver usuarios y algunas funcionalidades (por el momento, solo se puede eliminar).
+-   **Acceso a la Página sin Iniciar Sesión:** Ya no es estrictamente necesario iniciar sesión para utilizar la página (esto está a medio hacer, principalmente requiere la actualización de las funcionalidades del carrito).
+-   **Lista de Favoritos:** La función "Mi lista de favoritos" solo está disponible para usuarios registrados (el botón desaparece si no hay sesión iniciada).
+-   **Creación de Usuarios por Administrador:** Solo un administrador puede crear usuarios con roles de `ADMIN` y `WORKER`. Si un usuario se registra de forma normal, se registra como `ROLE_CLIENT`. Para asignar privilegios de administrador, es necesario inyectar el rol en SQL o actualizar el usuario existente a `ROLE_ADMIN`.
