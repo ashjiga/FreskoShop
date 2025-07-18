@@ -20,4 +20,6 @@ public interface UsuarioService {
     void eliminarUsuario(Usuario usuario);
     
     void eliminarUsuario(Long idUsuario);
+    
+   boolean existeUsername(String username);
 }

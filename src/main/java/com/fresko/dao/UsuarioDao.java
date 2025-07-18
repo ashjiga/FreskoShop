@@ -10,7 +10,6 @@ public interface UsuarioDao extends JpaRepository<Usuario, Long> {
     
     Usuario findByUsername(String username);
     boolean existsByUsername(String username);
-    
 
 @Component
 public class ProbarConexion {

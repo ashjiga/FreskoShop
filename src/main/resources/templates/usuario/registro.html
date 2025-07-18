@@ -51,19 +51,16 @@
                     <input th:field="*{telefono}" class="form-control"/>
                 </div>
 
-                <!-- Rol -->
-                <div class="mb-3" sec:authorize="hasRole('ROLE_ADMIN')">
+                <!-- Rol oculto para registros públicos -->
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
                     <label class="form-label">[[#{accion.tipo.cuenta}]]</label>
                     <select th:field="*{rol}" class="form-select">
-                        <option th:value="${'ROLE_CLIENTE'}">[[#{cuenta.cliente}]]</option>
-                        <option th:value="${'ROLE_TRABAJADOR'}">[[#{cuenta.trabajador}]]</option>
-                        <option th:value="${'ROLE_ADMIN'}">[[#{cuenta.admin}]]</option>
+                        <option value="ROLE_CLIENTE">[[#{cuenta.cliente}]]</option>
+                        <option value="ROLE_TRABAJADOR">[[#{cuenta.trabajador}]]</option>
+                        <option value="ROLE_ADMIN">[[#{cuenta.admin}]]</option>
                     </select>
                 </div>
-
-                <!-- Rol oculto para registros públicos -->
-                <input type="hidden" th:if="${#authorization.expr('!hasRole(''ROLE_ADMIN'')')}" th:field="*{rol}" value="ROLE_CLIENTE"/>
-
+ 
                 <button type="submit" class="btn btn-primary w-100">[[#{accion.registrarse}]]</button>
             </form>
 

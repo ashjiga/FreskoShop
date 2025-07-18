@@ -24,7 +24,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario getUsuarioPorId(Long idUsuario) {
-        return usuarioDao.findById(idUsuario).orElse(null);
+        return usuarioDao.findById(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + idUsuario));
     }
 
     @Override
@@ -47,13 +48,35 @@ public Usuario createUsuario(Usuario nuevoUsuario) {
     return usuarioDao.save(nuevoUsuario);
 }
 
-    @Override
-    public void guardarUsuario(Usuario usuario) {
-        if (!usuario.getPassword().startsWith("$2a")) {
-            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+@Override
+public void guardarUsuario(Usuario usuario) {
+    if (usuario.getIdUsuario() != null) {
+        // Es una edición de usuario existente
+        Usuario usuarioExistente = usuarioDao.findById(usuario.getIdUsuario()).orElseThrow();
+        
+        // Manejo del password
+        if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
+            if (!usuario.getPassword().startsWith("$2a")) {
+                usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            }
+        } else {
+            // Mantener el password existente si no se proporcionó uno nuevo
+            usuario.setPassword(usuarioExistente.getPassword());
         }
-        usuarioDao.save(usuario);
+        
+        // Copiar otros campos que no se editan en el formulario
+        usuario.setActivo(usuarioExistente.getActivo());
+        
+    } else {
+        // Es un nuevo usuario
+        if (usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password es requerido para nuevos usuarios");
+        }
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
     }
+    
+    usuarioDao.save(usuario);
+}
 
     @Override
     public Usuario getUsuario(Usuario usuario) {
@@ -69,4 +92,9 @@ public Usuario createUsuario(Usuario nuevoUsuario) {
     public void eliminarUsuario(Long idUsuario) {
         usuarioDao.deleteById(idUsuario);
     }
+    
+    @Override
+public boolean existeUsername(String username) {
+    return usuarioDao.existsByUsername(username);
+}
 }

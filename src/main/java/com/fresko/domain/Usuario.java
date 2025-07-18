@@ -2,6 +2,8 @@ package com.fresko.domain;
 
 import jakarta.persistence.*;  
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "usuario")
@@ -28,6 +30,19 @@ public class Usuario implements Serializable {
     @Column(nullable = false, length = 20)
     private String rol;               
 
+@PrePersist
+@PreUpdate
+private void validarRol() {
+    if (this.rol == null || !this.rol.matches("ROLE_(CLIENTE|TRABAJADOR|ADMIN)")) {
+        this.rol = "ROLE_CLIENTE";
+    }
+}
+    
+public static final List<String> ROLES_DISPONIBLES = Arrays.asList(
+            "ROLE_CLIENTE",
+            "ROLE_TRABAJADOR",
+            "ROLE_ADMIN");
+    
     public Long getIdUsuario() {
         return idUsuario;
     }
