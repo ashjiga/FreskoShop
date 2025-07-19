@@ -10,4 +10,7 @@ public interface ProductoDao extends JpaRepository<Producto, Long> {
     List<Producto> findByCategoria(Categoria categoria);
 
     List<Producto> findByActivoTrue();
+
+    List<Producto> findByCategoriaDescripcionIgnoreCase(String descripcion);
+
 }

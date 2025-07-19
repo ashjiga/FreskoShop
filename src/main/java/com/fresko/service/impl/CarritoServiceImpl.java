@@ -32,7 +32,7 @@ public class CarritoServiceImpl implements CarritoService {
     }
 
     @Override
-    public void agregarProducto(Usuario usuario, Long idProducto) {
+    public void agregarProducto(Usuario usuario, Long idProducto, int cantidad ) {
         Carrito existente = carritoDao.findByUsuarioAndProducto_IdProducto(usuario, idProducto);
         if (existente != null) {
             existente.setCantidad(existente.getCantidad() + 1);
@@ -78,4 +78,16 @@ public class CarritoServiceImpl implements CarritoService {
 
         carritoDao.deleteAll(carrito);
     }
+    
+        @Override
+    public int contarProductosEnCarrito(Usuario usuario) {
+        List<Carrito> carrito = carritoDao.findByUsuario(usuario);
+        return carrito.size();
+    }
+    @Override
+    public int getCantidadProductos(Usuario usuario) {
+        List<Carrito> carrito = carritoDao.findByUsuario(usuario);
+        return carrito.stream().mapToInt(Carrito::getCantidad).sum();
+    }
+    
 }

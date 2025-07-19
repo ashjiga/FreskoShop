@@ -42,4 +42,15 @@ public class ProductoServiceImpl implements ProductoService {
     public List<Producto> getPorCategoria(Categoria categoria) {
         return productoDao.findByCategoria(categoria);
     }
+
+    @Override
+    public List<Producto> getProductosPorCategoria(String categoria) {
+        return productoDao.findByCategoriaDescripcionIgnoreCase(categoria);
+    }
+
+    @Override
+    public Producto getProductoPorId(Long id) {
+        return productoDao.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+    }
 }

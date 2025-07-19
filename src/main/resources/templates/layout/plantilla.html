@@ -8,7 +8,6 @@
         <title>FreskoShop</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
         <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
-        <!-- Bootstrap Icons CSS para los iconos de corazón y carrito -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
         <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
@@ -17,130 +16,109 @@
         <style>
             body {
                 font-family: 'Inter', sans-serif;
-                background-color: #e0f2f7; 
+                background-color: #e0f2f7;
             }
-
             .header-main-nav {
-                background-color: #ffffff; 
+                background-color: #ffffff;
                 padding: 1rem 0;
             }
-
             .header-main-nav .navbar-brand {
-                color: #004d66 !important; 
+                color: #004d66 !important;
                 font-size: 3.5rem;
                 font-weight: bold;
                 margin: 0 auto;
             }
-
             .header-bottom-bar {
-                background-color: #004d66; 
+                background-color: #004d66;
                 padding: 1rem 0;
                 border-radius: 0 0 10px 10px;
                 display: flex;
-                justify-content: space-between; 
+                justify-content: space-between;
                 align-items: center;
             }
-
             .header-bottom-bar .btn {
                 margin-left: 10px;
                 border-radius: 8px;
                 padding: 8px 15px;
             }
-
-            .btn-info { 
-                background-color: #87ceeb; 
+            .btn-info {
+                background-color: #87ceeb;
                 border-color: #87ceeb;
-                color: #004d66; 
+                color: #004d66;
             }
-
             .btn-info:hover {
                 background-color: #64b5f6;
                 border-color: #64b5f6;
             }
-
             .btn-light {
                 background-color: #ffffff;
                 border-color: #ffffff;
-                color: #004d66; 
+                color: #004d66;
             }
-
             .btn-light:hover {
                 background-color: #e0e0e0;
                 border-color: #e0e0e0;
             }
-
             .lang-dropdown .dropdown-toggle {
-                background-color: #e0f2f7; 
-                color: #004d66; 
-                border: 1px solid #cce7f0; 
+                background-color: #e0f2f7;
+                color: #004d66;
+                border: 1px solid #cce7f0;
                 border-radius: 8px;
                 padding: 5px 10px;
                 font-weight: bold;
             }
-
             .lang-dropdown .dropdown-menu {
                 background-color: #e0f2f7;
             }
-
             .lang-dropdown .dropdown-item {
                 color: #004d66;
             }
-
             .lang-dropdown .dropdown-item:hover {
                 background-color: #cce7f0;
             }
-
-          
             .seccion-busqueda {
-                background-color: #e0f2f7; 
+                background-color: #e0f2f7;
                 padding: 1rem 0;
-                margin-top: 0; 
+                margin-top: 0;
             }
-
             .input-busqueda {
-                background-color: #d1dddd; 
+                background-color: #d1dddd;
                 border: none;
                 border-radius: 10px;
-                padding-left: 45px; 
+                padding-left: 45px;
                 height: 45px;
-                color: #333; 
+                color: #333;
             }
-
             .input-busqueda::placeholder {
-                color: #6c757d; 
+                color: #6c757d;
             }
-
             .search-icon-position {
                 position: absolute;
                 top: 50%;
-                left: 15px; 
+                left: 15px;
                 transform: translateY(-50%);
-                color: #6c757d; 
+                color: #6c757d;
                 font-size: 1.2em;
             }
-
             .menu-categorias {
-                background-color: #004d66; 
+                background-color: #004d66;
                 border-radius: 10px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-                padding: 15px 0; 
-                margin-top: 20px; 
-                display: flex; 
+                padding: 15px 0;
+                margin-top: 20px;
+                display: flex;
                 justify-content: space-around;
-                flex-wrap: wrap; 
+                flex-wrap: wrap;
             }
-
             .categoria-item {
                 text-align: center;
-                color: #ffffff; 
-                margin: 10px; 
-                text-decoration: none; 
+                color: #ffffff;
+                margin: 10px;
+                text-decoration: none;
             }
-
             .categoria-item:hover {
-                color: #87ceeb; 
+                color: #87ceeb;
             }
-
             .categoria-icono {
                 background-color: #7ed6df;
                 border-radius: 50%;
@@ -149,10 +127,10 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin: auto; 
-                font-size: 2em; 
-                color: #004d66; 
-                margin-bottom: 5px; 
+                margin: auto;
+                font-size: 2em;
+                color: #004d66;
+                margin-bottom: 5px;
             }
             .categoria-icono i {
                 color: #004d66;
@@ -166,7 +144,6 @@
 
             <nav class="navbar navbar-expand-lg header-main-nav">
                 <div class="container d-flex justify-content-between align-items-center">
-                    <!-- Selector de Idioma -->
                     <ul class="navbar-nav lang-dropdown">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -178,19 +155,12 @@
                             </ul>
                         </li>
                     </ul>
-
-                    <!-- Título "Fresko" centrado -->
                     <a th:href="@{/}" class="navbar-brand">Fresko</a>
-
-                    <!-- Espacio para alinear el título-->
                     <div style="width: 100px;"></div>
                 </div>
             </nav>
 
-            <!-- Barra inferior con botones de autenticación -->
             <div class="container-fluid header-bottom-bar d-flex justify-content-between align-items-center">
-
-                <!-- IZQUIERDA: Botón Volver -->
                 <div>
                     <div th:if="${vistaFavoritos}">
                         <a class="btn btn-light ms-2" th:href="@{/}">
@@ -199,57 +169,46 @@
                     </div>
                 </div>
 
-                <!-- DERECHA: Botones de Autenticación -->
                 <div class="d-flex">
-                    <!-- Mostrar SOLO cuando NO hay sesión -->
                     <div sec:authorize="!isAuthenticated()">
-                        <a class="btn btn-info" th:href="@{/auth/registro}" th:text="#{login.registro}">[[#{accion.registrarse}]]</a>
-                        <a class="btn btn-light" th:href="@{/auth/login}" th:text="#{login.inicioS}">[[#{accion.iniciar.sesion}]]</a>
+                        <a class="btn btn-info" th:href="@{/auth/registro}">[[#{accion.registrarse}]]</a>
+                        <a class="btn btn-light" th:href="@{/auth/login}">[[#{accion.iniciar.sesion}]]</a>
                     </div>
 
-                    <!-- Mostrar SOLO cuando SÍ hay sesión -->
-                   <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
-    
-    <!-- Botón solo para administradores -->
-    <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')">
-        <a class="btn btn-primary ms-2" th:href="@{/usuario/listado}">
-            <i class="fas fa-users"></i> [[#{admin.ver.usuarios}]]
-        </a>
-    </div>
-
-    <!-- Botón cerrar sesión -->
-    <form th:action="@{/logout}" method="post" class="ms-2" style="display:inline;">
-        <button type="submit" class="btn btn-light" th:text="#{login.CerrarS}">[[#{accion.cerrar.sesion}]]</button>
-    </form>
-</div>
-    
+                    <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')">
+                            <a class="btn btn-primary ms-2" th:href="@{/usuario/listado}">
+                                <i class="fas fa-users"></i> [[#{admin.ver.usuarios}]]
+                            </a>
+                        </div>
+                        <form th:action="@{/logout}" method="post" class="ms-2" style="display:inline;">
+                            <button type="submit" class="btn btn-light">[[#{accion.cerrar.sesion}]]</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
-
-            <div  class="container-fluid py-3 d-flex justify-content-between align-items-center seccion-busqueda">
-
-                <!-- Botón Mi Carrito a la izquierda -->
-                <a class="btn btn-dark" th:href="@{/carrito/listado}" style="background-color: #004d66; border-color: #004d66; color: white;">
+            <div class="container-fluid py-3 d-flex justify-content-between align-items-center seccion-busqueda">
+                <a class="btn btn-dark position-relative" th:href="@{/carrito/listado}"
+                   style="background-color: #004d66; border-color: #004d66; color: white;">
                     <i class="bi bi-cart"></i> [[#{plantilla.mi.carrito}]]
+                    <span th:if="${session.usuario != null and cantidadCarrito > 0}"
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
+                          th:text="${cantidadCarrito}">0</span>
                 </a>
 
-                <!-- Input de búsqueda -->
                 <div class="flex-grow-1 mx-3 position-relative">
                     <input type="text" class="form-control input-busqueda w-100" th:placeholder="#{plantilla.buscar}" />
                     <i class="fas fa-search search-icon-position"></i>
                 </div>
 
-                <!-- Botones del lado derecho -->
                 <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
-                    <a class="btn btn-dark me-2" th:unless="${vistaFavoritos}" th:href="@{/favorito/listado}" style="background-color: #004d66; border-color: #004d66; color: white;">
+                    <a class="btn btn-dark me-2" th:unless="${vistaFavoritos}" th:href="@{/favorito/listado}"
+                       style="background-color: #004d66; border-color: #004d66; color: white;">
                         <i class="bi bi-heart"></i> [[#{plantilla.mi.lista}]]
                     </a>
                 </div>
             </div>
-
-            
-
         </header>
 
         <footer th:fragment="footer" class="bg-secondary text-white mt-5 p-2">
