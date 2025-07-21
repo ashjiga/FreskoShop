@@ -22,4 +22,7 @@ public interface UsuarioService {
     void eliminarUsuario(Long idUsuario);
     
    boolean existeUsername(String username);
+   
+     // MÉTODO PARA FILTRAR POR CATEGORÍA
+    List<Producto> getProductosPorCategoria(String categoria);
 }
