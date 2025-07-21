@@ -23,6 +23,4 @@ public interface UsuarioService {
     
    boolean existeUsername(String username);
    
-     // MÉTODO PARA FILTRAR POR CATEGORÍA
-    List<Producto> getProductosPorCategoria(String categoria);
 }

@@ -1,51 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/plantilla :: head}">
-    <title>[[#{carrito.titulo}]]</title>
+    <title>Fresko</title>
 </head>
 <body>
-    <header th:replace="~{layout/plantilla :: header}"/>
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">[[#{carrito.titulo}]]</h2>
+    <header th:replace="~{layout/plantilla :: header}"></header>
 
-        <div th:if="${carrito != null and !carrito.isEmpty()}">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Total</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="item : ${carrito}">
-                        <td th:text="${item.producto.descripcion}">Nombre</td>
-                        <td th:text="${item.cantidad}">1</td>
-                        <td>₡<span th:text="${item.producto.precio}">Precio</span></td>
-                        <td>₡<span th:text="${item.producto.precio * item.cantidad}">Total</span></td>
-                        <td>
-                            <a th:href="@{'/carrito/eliminar/' + ${item.producto.idProducto}}" class="btn btn-danger">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <form th:action="@{/carrito/comprar}" method="post" class="text-end">
-                <button type="submit" class="btn btn-success">[[#{carrito.comprar}]]</button>
-            </form>
-        </div>
-        <div th:if="${carrito == null or carrito.isEmpty()}" class="alert alert-info text-center">
-            [[#{carrito.vacio}]]
-        </div>
-        <div class="text-center mt-4">
-            <a th:href="@{/}" class="btn btn-outline-primary">
-                <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+    <!-- Categorías  -->
+    <div class="container-fluid py-3 menu-categorias mt-3">
+        <div class="d-flex justify-content-center gap-5 text-light text-center flex-wrap">
+
+            <!-- Categoria: Abarrotes -->
+            <a href="#" class="categoria-item">
+                <div>
+                    <div class="categoria-icono">
+                        <img src="https://i.imgur.com/MuFVl7q.png" alt="Abarrotes" class="categoria-img">
+                    </div>
+                    <div class="mt-2" th:text="#{categoria.abarrotes}">Abarrotes</div>
+                </div>
             </a>
+
+            <!-- Categoria: Carnes -->
+            <a href="#" class="categoria-item">
+                <div>
+                    <div class="categoria-icono">
+                        <img src="https://i.imgur.com/KyRr3MZ.png" alt="Carnes" class="categoria-img">
+                    </div>
+                    <div class="mt-2" th:text="#{categoria.carnes}">Carnes</div>
+                </div>
+            </a>
+
+            <!-- Categoria: Bebidas -->
+            <a href="#" class="categoria-item">
+                <div>
+                    <div class="categoria-icono">
+                        <img src="https://i.imgur.com/7UhsaOp.png" alt="Bebidas" class="categoria-img">
+                    </div>
+                    <div class="mt-2" th:text="#{categoria.bebidas}">Bebidas</div>
+                </div>
+            </a>
+
+            <!-- Categoria: Limpieza -->
+            <a href="#" class="categoria-item">
+                <div>
+                    <div class="categoria-icono">
+                        <img src="https://i.imgur.com/dZwies6.png" alt="Limpieza" class="categoria-img">
+                    </div>
+                    <div class="mt-2" th:text="#{categoria.limpieza}">Limpieza</div>
+                </div>
+            </a>
+
+            <!-- Categoria: Mascotas -->
+            <a href="#" class="categoria-item">
+                <div>
+                    <div class="categoria-icono">
+                        <img src="https://i.imgur.com/hcCeQEf.png" alt="Mascotas" class="categoria-img">
+                    </div>
+                    <div class="mt-2" th:text="#{categoria.mascotas}">Mascotas</div>
+                </div>
+            </a>
+
         </div>
     </div>
-    <footer th:replace="~{layout/plantilla :: footer}"/>
+
+    <footer th:replace="~{layout/plantilla :: footer}"></footer>
 </body>
 </html>
