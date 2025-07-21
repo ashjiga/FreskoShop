@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>[[#{facturacion.titulo}]]</title>
+    <style>
+        input.form-control {
+            text-align: right;
+        }
+
+        form.checkout-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+ 
+        form.checkout-form label {
+            display: block;
+            text-align: right;
+            margin-bottom: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <header th:replace="~{layout/plantilla :: header}"/>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">[[#{facturacion.titulo}]]</h2>
+
+        <form th:action="@{/carrito/checkout}" method="post" class="checkout-form">
+            <div class="mb-3">
+                <label for="nombre">[[#{factu.nombre}]]</label>
+                <input type="text" id="nombre" name="nombre" required class="form-control" >
+            </div>
+
+            <div class="mb-3">
+                <label for="tarjeta">[[#{factu.tarjeta}]]</label>
+                <input type="text" id="tarjeta" name="tarjeta" required class="form-control" maxlength="19" placeholder="#### #### #### ####">
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label for="expiracion">[[#{factu.expiracion}]]</label>
+                    <input type="month" id="expiracion" name="expiracion" required class="form-control" placeholder="MM/AAAA">
+                </div>
+                <div class="col-6">
+                    <label for="cvv">CVV:</label>
+                    <input type="password" id="cvv" name="cvv" required class="form-control" maxlength="4" placeholder="123">
+                </div>
+            </div>
+
+           <button type="submit" class="btn btn-success w-100">[[#{accion.confirmar.compra}]]</button>
+        </form>
+
+        <div class="mt-4 text-center">
+            <a th:href="@{/carrito/listado}" class="btn btn-outline-primary">[[#{accion.volver.carrito}]]</a>
+        </div>
+    </div>
+    <footer th:replace="~{layout/plantilla :: footer}"/>
+</body>
+</html>
+
+

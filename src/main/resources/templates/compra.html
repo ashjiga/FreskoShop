@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>[[#{compra.exito.titulo}]]</title>
+</head>
+<body>
+    <header th:replace="~{layout/plantilla :: header}"/>
+    <div class="container mt-5 text-center">
+        <h2>[[#{mensaje.compra.exitosa}]]</h2>
+        <p>[[#{mensaje.gracias}]]</p>
+        <i class="fas fa-check-circle" style="font-size: 5rem; color: teal;"></i>
+        <div class="mt-4">
+            <a th:href="@{/}" class="btn btn-primary">[[#{accion.volver.inicio}]]</a>
+            <a th:href="@{/carrito/listado}" class="btn btn-secondary">[[#{accion.volver.carrito}]]</a>
+        </div>
+    </div>
+    <footer th:replace="~{layout/plantilla :: footer}"/>
+</body>
+</html>
+
