@@ -65,34 +65,16 @@ public class CarritoController {
         return "redirect:/producto/listado";
     }
 
-    @GetMapping("/producto/{id}")
-    public String verDetalleProducto(@PathVariable("id") Long id, HttpSession session, Model model) {
-        Producto producto = productoService.getProductoPorId(id);
-        if (producto == null) {
-            return "redirect:/"; // Redirigir si no se encuentra el producto
-        }
-
-        model.addAttribute("producto", producto);
-
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        if (usuario != null) {
-            int cantidad = carritoService.getCantidadProductos(usuario);
-            model.addAttribute("cantidadCarrito", cantidad);
-        }
-
-        return "producto/detallesProducto";
-    }
-
     @GetMapping("/checkout")
     public String mostrarCheckout(HttpSession session, Model model) {
-    Usuario usuario = (Usuario) session.getAttribute("usuario");
-    if (usuario == null) {
-        return "redirect:/auth/login";
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/auth/login";
+        }
+        int cantidad = carritoService.getCantidadProductos(usuario);
+        model.addAttribute("cantidadCarrito", cantidad);
+        return "checkout";
     }
-    int cantidad = carritoService.getCantidadProductos(usuario);
-    model.addAttribute("cantidadCarrito", cantidad);
-    return "checkout";
-}
 
     @PostMapping("/checkout")
     public String procesarCheckout(HttpSession session,
@@ -100,16 +82,15 @@ public class CarritoController {
             @RequestParam("tarjeta") String tarjeta,
             @RequestParam("expiracion") String expiracion,
             @RequestParam("cvv") String cvv) {
-    Usuario usuario = (Usuario) session.getAttribute("usuario");
-    if (usuario != null) {
-        System.out.println("Nombre: " + nombre);
-        System.out.println("Tarjeta: " + tarjeta);
-        System.out.println("Expiración: " + expiracion);
-        System.out.println("CVV: " + cvv);
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario != null) {
+            System.out.println("Nombre: " + nombre);
+            System.out.println("Tarjeta: " + tarjeta);
+            System.out.println("Expiración: " + expiracion);
+            System.out.println("CVV: " + cvv);
 
-        carritoService.comprar(usuario);
-    }
-    return "compra";
+            carritoService.comprar(usuario);
+        }
+        return "compra";
     }
 }
-

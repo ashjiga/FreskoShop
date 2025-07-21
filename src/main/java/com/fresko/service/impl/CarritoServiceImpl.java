@@ -8,6 +8,7 @@ import com.fresko.domain.*;
 import com.fresko.service.CarritoService;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class CarritoServiceImpl implements CarritoService {
     }
 
     @Override
-    public void agregarProducto(Usuario usuario, Long idProducto, int cantidad ) {
+    public void agregarProducto(Usuario usuario, Long idProducto, int cantidad) {
         Carrito existente = carritoDao.findByUsuarioAndProducto_IdProducto(usuario, idProducto);
         if (existente != null) {
             existente.setCantidad(existente.getCantidad() + 1);
@@ -50,21 +51,26 @@ public class CarritoServiceImpl implements CarritoService {
     }
 
     @Override
-    public void eliminarProducto(Usuario usuario, Long idProducto) {
-        carritoDao.deleteByUsuarioAndProducto_IdProducto(usuario, idProducto);
+    public void eliminarProducto(Usuario usuario, Long idCarrito) {
+        Optional<Carrito> item = carritoDao.findById(idCarrito);
+        if (item.isPresent() && item.get().getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
+            carritoDao.deleteById(idCarrito);
+        }
     }
 
     @Override
     public void comprar(Usuario usuario) {
         List<Carrito> carrito = carritoDao.findByUsuario(usuario);
-        if (carrito.isEmpty()) return;
+        if (carrito.isEmpty()) {
+            return;
+        }
 
         Factura factura = new Factura();
         factura.setUsuario(usuario);
         factura.setFecha(LocalDate.now());
         double total = carrito.stream().mapToDouble(c -> c.getProducto().getPrecio() * c.getCantidad()).sum();
         factura.setTotal(total);
-        factura.setEstado(1); 
+        factura.setEstado(1);
         facturaDao.save(factura);
 
         for (Carrito item : carrito) {
@@ -78,16 +84,17 @@ public class CarritoServiceImpl implements CarritoService {
 
         carritoDao.deleteAll(carrito);
     }
-    
-        @Override
+
+    @Override
     public int contarProductosEnCarrito(Usuario usuario) {
         List<Carrito> carrito = carritoDao.findByUsuario(usuario);
         return carrito.size();
     }
+
     @Override
     public int getCantidadProductos(Usuario usuario) {
         List<Carrito> carrito = carritoDao.findByUsuario(usuario);
         return carrito.stream().mapToInt(Carrito::getCantidad).sum();
     }
-    
+
 }
