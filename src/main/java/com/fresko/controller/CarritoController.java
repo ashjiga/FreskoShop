@@ -82,4 +82,34 @@ public class CarritoController {
 
         return "producto/detallesProducto";
     }
+
+    @GetMapping("/checkout")
+    public String mostrarCheckout(HttpSession session, Model model) {
+    Usuario usuario = (Usuario) session.getAttribute("usuario");
+    if (usuario == null) {
+        return "redirect:/auth/login";
+    }
+    int cantidad = carritoService.getCantidadProductos(usuario);
+    model.addAttribute("cantidadCarrito", cantidad);
+    return "checkout";
+}
+
+    @PostMapping("/checkout")
+    public String procesarCheckout(HttpSession session,
+            @RequestParam("nombre") String nombre,
+            @RequestParam("tarjeta") String tarjeta,
+            @RequestParam("expiracion") String expiracion,
+            @RequestParam("cvv") String cvv) {
+    Usuario usuario = (Usuario) session.getAttribute("usuario");
+    if (usuario != null) {
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Tarjeta: " + tarjeta);
+        System.out.println("Expiración: " + expiracion);
+        System.out.println("CVV: " + cvv);
+
+        carritoService.comprar(usuario);
+    }
+    return "compra";
+    }
+}
 }
