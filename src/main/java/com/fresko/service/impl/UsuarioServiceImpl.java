@@ -3,20 +3,27 @@ package com.fresko.service.impl;
 import com.fresko.dao.UsuarioDao;
 import com.fresko.domain.Usuario;
 import com.fresko.service.UsuarioService;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+
 @Service
+@Transactional
 public class UsuarioServiceImpl implements UsuarioService {
 
-    @Autowired
-    private UsuarioDao usuarioDao;
+    private final UsuarioDao usuarioDao;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    public UsuarioServiceImpl(UsuarioDao usuarioDao,
+            PasswordEncoder passwordEncoder) {
+        this.usuarioDao = usuarioDao;
+        this.passwordEncoder = passwordEncoder;
+    }
+    
     @Override
     public Usuario getUsuarioPorUsername(String username) {
         return usuarioDao.findByUsername(username);
@@ -49,34 +56,36 @@ public Usuario createUsuario(Usuario nuevoUsuario) {
 }
 
 @Override
-public void guardarUsuario(Usuario usuario) {
-    if (usuario.getIdUsuario() != null) {
-        // Es una edición de usuario existente
-        Usuario usuarioExistente = usuarioDao.findById(usuario.getIdUsuario()).orElseThrow();
-        
-        // Manejo del password
-        if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
-            if (!usuario.getPassword().startsWith("$2a")) {
-                usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+    public void guardarUsuario(Usuario usuario) {
+        if (usuario.getIdUsuario() == null) {
+            // Validaciones para nuevo usuario
+            if (usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
+                throw new IllegalArgumentException("Password es requerido para nuevos usuarios");
+            }
+            
+            if (usuarioDao.existsByUsername(usuario.getUsername())) {
+                throw new IllegalArgumentException("El nombre de usuario ya existe");
+            }
+            
+            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            usuario.setActivo(true);
+            
+            if (usuario.getRol() == null) {
+                usuario.setRol("ROLE_CLIENTE");
             }
         } else {
-            // Mantener el password existente si no se proporcionó uno nuevo
-            usuario.setPassword(usuarioExistente.getPassword());
+            Usuario usuarioExistente = usuarioDao.findById(usuario.getIdUsuario())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+            
+            if (usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
+                usuario.setPassword(usuarioExistente.getPassword());
+            } else if (!usuario.getPassword().startsWith("$2a")) {
+                usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            }  
+            usuario.setActivo(usuarioExistente.getActivo());
         }
-        
-        // Copiar otros campos que no se editan en el formulario
-        usuario.setActivo(usuarioExistente.getActivo());
-        
-    } else {
-        // Es un nuevo usuario
-        if (usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("Password es requerido para nuevos usuarios");
-        }
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        usuarioDao.save(usuario);
     }
-    
-    usuarioDao.save(usuario);
-}
 
     @Override
     public Usuario getUsuario(Usuario usuario) {
@@ -97,4 +106,6 @@ public void guardarUsuario(Usuario usuario) {
 public boolean existeUsername(String username) {
     return usuarioDao.existsByUsername(username);
 }
+
+
 }

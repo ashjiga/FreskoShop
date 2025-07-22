@@ -57,6 +57,22 @@
                                     </option>
                                 </select>
                             </div>
+
+                            <div class="mb-3" th:unless="${usuario.idUsuario != null}">
+                                <label class="form-label" th:text="#{usuario.password}">Contraseña</label>
+                                <input type="password" class="form-control" th:field="*{password}" required>
+                            </div>
+
+                            <div class="mb-3" th:if="${usuario.idUsuario != null}">
+                                <label class="form-label" th:text="#{usuario.password}">Nueva Contraseña (opcional)</label>
+                                <input type="password" class="form-control" th:field="*{password}" 
+                                       placeholder="Dejar vacío para mantener la actual">
+                            </div>
+
+                            <div class="alert alert-danger" th:if="${error}">
+                                <span th:text="${error}"></span>
+                            </div>
+                            
                         </div>
                     </div>
                     

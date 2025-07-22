@@ -49,8 +49,19 @@ public String guardarUsuario(@Valid @ModelAttribute("usuario") Usuario usuario,
     if (result.hasErrors()) {
         return "usuario/formulario";
     }
-    usuarioService.guardarUsuario(usuario);
-    redirectAttributes.addFlashAttribute("success", "Usuario actualizado correctamente");
+    
+    try {
+        usuarioService.guardarUsuario(usuario);
+        redirectAttributes.addFlashAttribute("success", 
+            usuario.getIdUsuario() != null ? 
+            "Usuario actualizado correctamente" : 
+            "Usuario creado correctamente");
+    } catch (IllegalArgumentException e) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return "redirect:/usuario/" + (usuario.getIdUsuario() != null ? 
+              "modificar/" + usuario.getIdUsuario() : "nuevo");
+    }
+    
     return "redirect:/usuario/listado";
 }
     

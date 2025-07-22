@@ -8,7 +8,7 @@ import java.util.List;
 @Entity
 @Table(name = "usuario")
 public class Usuario implements Serializable {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
@@ -35,7 +35,7 @@ public class Usuario implements Serializable {
 private void validarRol() {
     if (this.rol == null || !this.rol.matches("ROLE_(CLIENTE|TRABAJADOR|ADMIN)")) {
         this.rol = "ROLE_CLIENTE";
-    }
+    }  
 }
     
 public static final List<String> ROLES_DISPONIBLES = Arrays.asList(
@@ -46,7 +46,7 @@ public static final List<String> ROLES_DISPONIBLES = Arrays.asList(
     public Long getIdUsuario() {
         return idUsuario;
     }
-
+    
     public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
     }
