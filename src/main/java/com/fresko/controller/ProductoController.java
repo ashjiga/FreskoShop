@@ -70,7 +70,7 @@ public class ProductoController {
         return "redirect:/producto/listado";
     }
 
-    // Editar producto
+    // Editar product
     @GetMapping("/producto/editar/{idProducto}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')")
     public String editar(@PathVariable Long idProducto, Model model) {
