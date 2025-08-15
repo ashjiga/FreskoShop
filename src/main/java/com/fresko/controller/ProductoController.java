@@ -7,7 +7,6 @@ import com.fresko.service.ProductoService;
 import com.fresko.service.CategoriaService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,18 +14,23 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.security.core.Authentication;
+
+import com.fresko.service.UsuarioService; 
+import com.fresko.service.FavoritoService;
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class ProductoController {
 
-    @Autowired
-    private ProductoService productoService;
+    private final ProductoService productoService;
+    private final CarritoService carritoService;
+    private final CategoriaService categoriaService;
+    private final UsuarioService usuarioService;
+    private final FavoritoService favoritoService;
 
-    @Autowired
-    private CarritoService carritoService;
-
-    @Autowired
-    private CategoriaService categoriaService;
 
     // Listar productos para ADMIN o TRABAJADOR
     @GetMapping("/producto/listado")
@@ -38,12 +42,29 @@ public class ProductoController {
     }
 
     // Mostrar todos los productos al usuario en el index
-    @GetMapping("/")
-    public String mostrarIndex(Model model) {
-        List<Producto> productos = productoService.getProductos(true);
+//    @GetMapping("/")
+//    public String mostrarIndex(Model model) {
+//        List<Producto> productos = productoService.getProductos(true);
+//        model.addAttribute("productos", productos);
+//        return "index";
+//    }
+//    
+    @GetMapping({"/", "/index"})
+    public String index(Model model, Authentication auth) {
+        var productos = productoService.getProductos(true);
         model.addAttribute("productos", productos);
+
+        if (auth != null && auth.isAuthenticated()) {
+            var usuario = usuarioService.getUsuarioPorUsername(auth.getName());
+            var favs = favoritoService.getFavoritosDeUsuario(usuario.getIdUsuario());
+            var favoritosIds = favs.stream()
+                    .map(f -> f.getProducto().getIdProducto())
+                    .collect(Collectors.toSet());
+            model.addAttribute("favoritosIds", favoritosIds);
+        }
         return "index";
     }
+    
 
     // Crear nuevo producto
     @GetMapping("/producto/nuevo")
@@ -91,18 +112,16 @@ public class ProductoController {
     }
 
     // Ver detalles del producto (usado por el index y los links de cada tarjeta)
-    @GetMapping("/producto/{id}")
-    public String verDetalleProducto(@PathVariable("id") Long id, Model model, HttpSession session) {
+  @GetMapping("/producto/{id}")
+    public String verDetalleProducto(@PathVariable("id") Long id, Model model, Authentication auth) {
         Producto producto = productoService.getProductoPorId(id);
         model.addAttribute("producto", producto);
 
-        // Mostrar cantidad de productos en carrito si hay usuario autenticado
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        if (usuario != null) {
+        if (auth != null && auth.isAuthenticated()) {
+            Usuario usuario = usuarioService.getUsuarioPorUsername(auth.getName());
             int cantidad = carritoService.getCantidadProductos(usuario);
             model.addAttribute("cantidadCarrito", cantidad);
         }
-
         return "producto/detallesProducto";
     }
 
@@ -114,5 +133,11 @@ public class ProductoController {
         model.addAttribute("categoriaSeleccionada", categoria);
         return "index";
     }
-
+    
+    
+    @GetMapping("/productos")
+    public String productosRedirect() {
+        return "redirect:/";
+    }
+    
 }

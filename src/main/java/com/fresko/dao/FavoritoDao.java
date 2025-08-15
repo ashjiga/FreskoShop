@@ -9,7 +9,10 @@ public interface FavoritoDao extends JpaRepository<Favorito, Long> {
     
     List<Favorito> findByUsuario(Usuario usuario);
 
-    boolean existsByUsuarioAndProducto_IdProducto(Usuario usuario, Long idProducto);
+    boolean existsByUsuarioIdUsuarioAndProductoIdProducto(Long idUsuario, Long idProducto);
 
-    void deleteByUsuarioAndProducto_IdProducto(Usuario usuario, Long idProducto);
+    void deleteByUsuarioIdUsuarioAndProductoIdProducto(Long idUsuario, Long idProducto);
+
+    java.util.List<com.fresko.domain.Favorito> findByUsuarioIdUsuario(Long idUsuario);
+
 }
