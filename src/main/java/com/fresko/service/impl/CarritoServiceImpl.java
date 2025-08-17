@@ -6,6 +6,7 @@ import com.fresko.dao.FacturaDao;
 import com.fresko.dao.VentaDao;
 import com.fresko.domain.*;
 import com.fresko.service.CarritoService;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -50,11 +51,34 @@ public class CarritoServiceImpl implements CarritoService {
         }
     }
 
+ @Override
+@Transactional
+public void eliminarProducto(Usuario usuario, Long idProducto) {
+    Carrito carrito = carritoDao.findByUsuarioAndProducto_IdProducto(usuario, idProducto);
+    if (carrito != null) {
+        carritoDao.delete(carrito);
+    }
+}
+
     @Override
-    public void eliminarProducto(Usuario usuario, Long idCarrito) {
-        Optional<Carrito> item = carritoDao.findById(idCarrito);
-        if (item.isPresent() && item.get().getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
-            carritoDao.deleteById(idCarrito);
+    public void aumentarCantidad(com.fresko.domain.Usuario usuario, Long idProducto) {
+        Carrito item = carritoDao.findByUsuarioAndProducto_IdProducto(usuario, idProducto);
+        if (item != null) {
+            item.setCantidad(item.getCantidad() + 1);
+            carritoDao.save(item);
+        }
+    }
+
+    @Override
+    public void restarCantidad(com.fresko.domain.Usuario usuario, Long idProducto) {
+        Carrito item = carritoDao.findByUsuarioAndProducto_IdProducto(usuario, idProducto);
+        if (item != null) {
+            if (item.getCantidad() > 1) {
+                item.setCantidad(item.getCantidad() - 1);
+                carritoDao.save(item);
+            } else {
+                carritoDao.delete(item);
+            }
         }
     }
 
@@ -74,12 +98,22 @@ public class CarritoServiceImpl implements CarritoService {
         facturaDao.save(factura);
 
         for (Carrito item : carrito) {
-            Venta venta = new Venta();
-            venta.setFactura(factura);
-            venta.setProducto(item.getProducto());
-            venta.setPrecio(item.getProducto().getPrecio());
-            venta.setCantidad(item.getCantidad());
-            ventaDao.save(venta);
+            Producto producto = item.getProducto();
+            if (producto != null) {
+                int nuevaCantidad = producto.getExistencias() - item.getCantidad();
+                if (nuevaCantidad >= 0) {
+                    producto.setExistencias(nuevaCantidad);
+                    productoDao.save(producto);
+
+                    // Guardar la venta
+                    Venta venta = new Venta();
+                    venta.setFactura(factura);
+                    venta.setProducto(producto);
+                    venta.setPrecio(item.getProducto().getPrecio());
+                    venta.setCantidad(item.getCantidad());
+                    ventaDao.save(venta);
+                }
+            }
         }
 
         carritoDao.deleteAll(carrito);

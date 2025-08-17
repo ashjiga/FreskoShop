@@ -21,16 +21,15 @@ public class Producto implements Serializable {
     private Double precio;
     private Integer existencias;
 
+    
     @Column(name = "ruta_imagen")
-    private String rutaImagen;
+    private String imagenUrl;
 
     private boolean activo;
 
-    public Producto() {
-    }
+    public Producto() {}
 
     // Getters y setters
-
     public Long getIdProducto() {
         return idProducto;
     }
@@ -79,12 +78,12 @@ public class Producto implements Serializable {
         this.existencias = existencias;
     }
 
-    public String getRutaImagen() {
-        return rutaImagen;
+    public String getImagenUrl() {
+        return imagenUrl;
     }
 
-    public void setRutaImagen(String rutaImagen) {
-        this.rutaImagen = rutaImagen;
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
     }
 
     public boolean isActivo() {
@@ -94,4 +93,5 @@ public class Producto implements Serializable {
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
+   
 }

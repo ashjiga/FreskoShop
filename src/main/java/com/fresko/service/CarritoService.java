@@ -21,4 +21,10 @@ public interface CarritoService {
     int contarProductosEnCarrito(Usuario usuario);
 
     int getCantidadProductos(Usuario usuario);
+
+    void aumentarCantidad(Usuario usuario, Long idProducto);
+
+    void restarCantidad(Usuario usuario, Long idProducto);
+    
+    
 }

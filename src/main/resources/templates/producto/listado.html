@@ -1,66 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/plantilla :: head}">
-    <title th:text="${producto.idProducto != null} ? 'Editar Producto' : 'Nuevo Producto'"></title>
-</head>
+<html xmlns="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/plantilla :: head}"></head>
 <body>
-<header th:replace="~{layout/plantilla :: header}"/>
+<header th:replace="~{layout/plantilla :: header}"></header>
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4" 
-        th:text="${producto.idProducto != null} ? 'Editar Producto' : 'Nuevo Producto'"></h2>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="m-0">[[#{producto.listado}]]</h2>
+    <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_TRABAJADOR')">
+      <a class="btn btn-success" th:href="@{/producto/nuevo}">[[#{producto.agregar}]]</a>
+    </sec:authorize>
+  </div>
 
-    <form th:action="@{/admin/producto/guardar}" th:object="${producto}" method="post">
-        <input type="hidden" th:field="*{idProducto}"/>
-
-        <div class="mb-3">
-            <label class="form-label">Descripción</label>
-            <input class="form-control" th:field="*{descripcion}" required/>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Detalle</label>
-            <textarea class="form-control" th:field="*{detalle}"></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Precio</label>
-            <input type="number" step="0.01" class="form-control" th:field="*{precio}" required/>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Existencias</label>
-            <input type="number" class="form-control" th:field="*{existencias}" required/>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Imagen (URL)</label>
-            <input class="form-control" th:field="*{rutaImagen}" />
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Categoría</label>
-            <select class="form-select" th:field="*{categoria}" required>
-                <option th:each="cat : ${categorias}" 
-                        th:value="${cat}" 
-                        th:text="${cat.descripcion}">
-                </option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Activo</label>
-            <input type="checkbox" th:field="*{activo}"/>
-        </div>
-
-        <div class="d-flex justify-content-between">
-            <a class="btn btn-secondary" th:href="@{/admin/producto/listado}">Cancelar</a>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-        </div>
-    </form>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>[[#{lista.columna.id}]]</th>
+          <th>[[#{producto.descripcion}]]</th>
+          <th>[[#{producto.precio}]]</th>
+          <th>[[#{producto.existencias}]]</th>
+          <th>[[#{accion.acciones}]]</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:if="${productos == null or #lists.isEmpty(productos)}">
+          <td colspan="5" class="text-center">[[#{lista.sin_elementos}]]</td>
+        </tr>
+        <tr th:each="p : ${productos}">
+          <td th:text="${p.idProducto}">1</td>
+          <td th:text="${p.descripcion}">Desc</td>
+          <td th:text="${p.precio}">0.00</td>
+          <td th:text="${p.existencias}">0</td>
+          <td>
+            <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_TRABAJADOR')">
+              <a class="btn btn-primary btn-sm" th:href="@{'/producto/editar/' + ${p.idProducto}}">[[#{accion.actualizar}]]</a>
+              <a class="btn btn-danger btn-sm" th:href="@{'/producto/eliminar/' + ${p.idProducto}}">[[#{accion.eliminar}]]</a>
+            </sec:authorize>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<footer th:replace="~{layout/plantilla :: footer}"/>
+<footer th:replace="~{layout/plantilla :: footer}"></footer>
 </body>
 </html>
-

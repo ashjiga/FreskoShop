@@ -1,28 +1,25 @@
 package com.fresko.controller;
 
 import com.fresko.domain.Producto;
-import com.fresko.domain.Usuario;
 import com.fresko.service.CarritoService;
-import com.fresko.service.ProductoService;
 import com.fresko.service.CategoriaService;
-import jakarta.servlet.http.HttpSession;
+import com.fresko.service.ProductoService;
+import com.fresko.service.UsuarioService;
+import com.fresko.service.FavoritoService;
 import jakarta.validation.Valid;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.security.core.Authentication;
-
-import com.fresko.service.UsuarioService; 
-import com.fresko.service.FavoritoService;
-import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequiredArgsConstructor
 public class ProductoController {
 
     private final ProductoService productoService;
@@ -31,29 +28,39 @@ public class ProductoController {
     private final UsuarioService usuarioService;
     private final FavoritoService favoritoService;
 
+    public ProductoController(ProductoService productoService,
+                              CarritoService carritoService,
+                              CategoriaService categoriaService,
+                              UsuarioService usuarioService,
+                              FavoritoService favoritoService) {
+        this.productoService = productoService;
+        this.carritoService = carritoService;
+        this.categoriaService = categoriaService;
+        this.usuarioService = usuarioService;
+        this.favoritoService = favoritoService;
+    }
 
-    // Listar productos para ADMIN o TRABAJADOR
     @GetMapping("/producto/listado")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')")
+    @Secured({"ROLE_ADMIN", "ROLE_TRABAJADOR"})
     public String listado(Model model) {
-        List<Producto> productos = productoService.getProductos(false);
+        var productos = productoService.getProductos(true);
         model.addAttribute("productos", productos);
         return "producto/listado";
     }
 
-    // Mostrar todos los productos al usuario en el index
-//    @GetMapping("/")
-//    public String mostrarIndex(Model model) {
-//        List<Producto> productos = productoService.getProductos(true);
-//        model.addAttribute("productos", productos);
-//        return "index";
-//    }
-//    
-    @GetMapping({"/", "/index"})
-    public String index(Model model, Authentication auth) {
-        var productos = productoService.getProductos(true);
-        model.addAttribute("productos", productos);
+    @GetMapping("/producto/detalles/{id}")
+    public String detalles(@PathVariable("id") Long id, Model model, Authentication auth) {
+        var producto = productoService.getProductoPorId(id);
+        model.addAttribute("producto", producto);
 
+    // Obtener productos relacionados
+    var productosRelacionados = productoService.getProductosPorCategoria(producto.getCategoria().getDescripcion());
+    // Filtrar para excluir el producto actual
+    productosRelacionados = productosRelacionados.stream()
+            .filter(p -> !p.getIdProducto().equals(id))
+            .collect(Collectors.toList());    
+    model.addAttribute("productosRelacionados", productosRelacionados);
+    
         if (auth != null && auth.isAuthenticated()) {
             var usuario = usuarioService.getUsuarioPorUsername(auth.getName());
             var favs = favoritoService.getFavoritosDeUsuario(usuario.getIdUsuario());
@@ -62,70 +69,102 @@ public class ProductoController {
                     .collect(Collectors.toSet());
             model.addAttribute("favoritosIds", favoritosIds);
         }
-        return "index";
+        return "producto/detallesProducto";
     }
-    
 
-    // Crear nuevo producto
-    @GetMapping("/producto/nuevo")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')")
-    public String nuevoProducto(Model model) {
-        model.addAttribute("producto", new Producto());
+    @GetMapping("/producto/editar/{id}")
+    @Secured({"ROLE_ADMIN", "ROLE_TRABAJADOR"})
+    public String editar(@PathVariable("id") Long id, Model model) {
+        var producto = productoService.getProductoPorId(id);
+        model.addAttribute("producto", producto);
         model.addAttribute("categorias", categoriaService.getCategorias(true));
         return "producto/formulario";
     }
 
-    // Guardar producto
+    @GetMapping("/producto/nuevo")
+    @Secured({"ROLE_ADMIN", "ROLE_TRABAJADOR"})
+    public String productoNuevo(Producto producto, Model model) {
+        model.addAttribute("categorias", categoriaService.getCategorias(true));
+        return "producto/formulario";
+    }
+
+    /** Guardar (crea o actualiza según tenga id) */
     @PostMapping("/producto/guardar")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')")
-    public String guardar(@Valid @ModelAttribute("producto") Producto producto,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+    @Secured({"ROLE_ADMIN", "ROLE_TRABAJADOR"})
+    public String productoGuardar(@Valid @ModelAttribute Producto producto,
+                                  BindingResult result,
+                                  @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile,
+                                  Model model,
+                                  RedirectAttributes ra) {
         if (result.hasErrors()) {
             model.addAttribute("categorias", categoriaService.getCategorias(true));
             return "producto/formulario";
         }
-        productoService.save(producto);
-        redirectAttributes.addFlashAttribute("success", "Producto guardado correctamente.");
-        return "redirect:/producto/listado";
-    }
-
-    // Editar product
-    @GetMapping("/producto/editar/{idProducto}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')")
-    public String editar(@PathVariable Long idProducto, Model model) {
-        Producto producto = productoService.getProductoPorId(idProducto);
-        model.addAttribute("producto", producto);
-        model.addAttribute("categorias", categoriaService.getCategorias(true));
-        return "producto/formulario";
-    }
-
-    // Eliminar producto
-    @GetMapping("/producto/eliminar/{idProducto}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')")
-    public String eliminar(@PathVariable Long idProducto, RedirectAttributes redirectAttributes) {
-        Producto producto = productoService.getProductoPorId(idProducto);
-        productoService.delete(producto);
-        redirectAttributes.addFlashAttribute("success", "Producto eliminado correctamente.");
-        return "redirect:/producto/listado";
-    }
-
-    // Ver detalles del producto (usado por el index y los links de cada tarjeta)
-  @GetMapping("/producto/{id}")
-    public String verDetalleProducto(@PathVariable("id") Long id, Model model, Authentication auth) {
-        Producto producto = productoService.getProductoPorId(id);
-        model.addAttribute("producto", producto);
-
-        if (auth != null && auth.isAuthenticated()) {
-            Usuario usuario = usuarioService.getUsuarioPorUsername(auth.getName());
-            int cantidad = carritoService.getCantidadProductos(usuario);
-            model.addAttribute("cantidadCarrito", cantidad);
+        if (producto.getIdProducto() == null) {
+            productoService.save(producto, imagenFile);      // <-- sube a Firebase si viene archivo
+            ra.addFlashAttribute("mensaje", "Producto creado exitosamente!");
+        } else {
+            productoService.update(producto, imagenFile);    // <-- reemplaza imagen si viene nueva
+            ra.addFlashAttribute("mensaje", "Producto actualizado exitosamente!");
         }
-        return "producto/detallesProducto";
+        return "redirect:/producto/listado";
     }
 
-    // Filtrar por categoría como /carnes, /bebidas, etc.
+    /** Ruta extra por si tu formulario apunta a /producto/modificar/{id} */
+    @PostMapping("/producto/modificar/{id}")
+    @Secured({"ROLE_ADMIN", "ROLE_TRABAJADOR"})
+    public String productoModificar(@PathVariable Long id,
+                                    @Valid @ModelAttribute Producto producto,
+                                    BindingResult result,
+                                    @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile,
+                                    Model model,
+                                    RedirectAttributes ra) {
+        if (result.hasErrors()) {
+            model.addAttribute("categorias", categoriaService.getCategorias(true));
+            return "producto/formulario";
+        }
+        producto.setIdProducto(id);
+        productoService.update(producto, imagenFile);
+        ra.addFlashAttribute("mensaje", "Producto actualizado exitosamente!");
+        return "redirect:/producto/listado";
+    }
+
+    @GetMapping("/producto/eliminar/{id}")
+    @Secured({"ROLE_ADMIN", "ROLE_TRABAJADOR"})
+    public String productoEliminar(@PathVariable("id") Long id) {
+        var producto = productoService.getProductoPorId(id);
+        productoService.delete(producto);
+        return "redirect:/producto/listado";
+    }
+
+@GetMapping({"/", "/index"})
+public String index(Model model, Authentication auth) {
+    var productos = productoService.getProductos(true);
+    model.addAttribute("productos", productos);
+
+    var favoritosIds = java.util.Collections.emptySet();
+    var idsProductosEnCarrito = java.util.Collections.emptySet();
+    
+    if (auth != null && auth.isAuthenticated()) {
+        var usuario = usuarioService.getUsuarioPorUsername(auth.getName());
+        
+        // Cargar y añadir los IDs de los favoritos
+        var favs = favoritoService.getFavoritosDeUsuario(usuario.getIdUsuario());
+        favoritosIds = favs.stream()
+                .map(f -> f.getProducto().getIdProducto())
+                .collect(java.util.stream.Collectors.toSet());
+                
+        // Cargar y añadir los IDs de los productos en el carrito
+        var productosEnCarrito = carritoService.getCarritoPorUsuario(usuario);
+        idsProductosEnCarrito = productosEnCarrito.stream()
+                .map(item -> item.getProducto().getIdProducto())
+                .collect(java.util.stream.Collectors.toSet());
+    }
+    
+    model.addAttribute("favoritosIds", favoritosIds);
+    model.addAttribute("idsProductosEnCarrito", idsProductosEnCarrito); // Esta línea es la clave
+    return "index";
+}
     @GetMapping("/{categoria}")
     public String filtrarPorCategoria(@PathVariable("categoria") String categoria, Model model) {
         List<Producto> productos = productoService.getProductosPorCategoria(categoria);
@@ -133,11 +172,9 @@ public class ProductoController {
         model.addAttribute("categoriaSeleccionada", categoria);
         return "index";
     }
-    
-    
+
     @GetMapping("/productos")
     public String productosRedirect() {
         return "redirect:/";
     }
-    
 }

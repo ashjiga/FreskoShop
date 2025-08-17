@@ -16,39 +16,80 @@ import org.springframework.web.bind.annotation.*;
 public class CarritoController {
 
     @Autowired
-    private CarritoService carritoService;
-
-    @Autowired
     private ProductoService productoService;
+      
+  @Autowired
+    private CarritoService carritoService;
+  
+@GetMapping("/listado")
+public String listadoCarrito(HttpSession session, Model model) {
+    Usuario usuario = (Usuario) session.getAttribute("usuario");
+    if (usuario != null) {
+        var lista = carritoService.getCarritoPorUsuario(usuario);
+        model.addAttribute("carrito", lista);
 
-    @GetMapping("/listado")
-    public String listadoCarrito(HttpSession session, Model model) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        if (usuario != null) {
-            var lista = carritoService.getCarritoPorUsuario(usuario);
-            model.addAttribute("carrito", lista);
+        int cantidad = lista.stream().mapToInt(item -> item.getCantidad()).sum();
+        model.addAttribute("cantidadCarrito", cantidad);
 
-            int cantidad = carritoService.getCantidadProductos(usuario);
-            model.addAttribute("cantidadCarrito", cantidad);
-        }
-        return "listado";
+        double subtotal = lista.stream()
+                .mapToDouble(item -> item.getCantidad() * item.getProducto().getPrecio())
+                .sum();
+        
+        double impuestos = subtotal * 0.13; 
+        double total = subtotal + impuestos;
+        
+        model.addAttribute("subtotal", subtotal);
+        model.addAttribute("impuestos", impuestos);
+        model.addAttribute("total", total);
     }
+    return "carrito/listado";
+}
+    
+    @PostMapping("/aumentar")
+public String aumentarProducto(@RequestParam("idProducto") Long idProducto, HttpSession session) {
+    Usuario usuario = (Usuario) session.getAttribute("usuario");
+    if (usuario != null) {
+        carritoService.aumentarCantidad(usuario, idProducto);
+    }
+    return "redirect:/carrito/listado";
+}
+
+@PostMapping("/restar")
+public String restarProducto(@RequestParam("idProducto") Long idProducto, HttpSession session) {
+    Usuario usuario = (Usuario) session.getAttribute("usuario");
+    if (usuario != null) {
+        carritoService.restarCantidad(usuario, idProducto);
+    }
+    return "redirect:/carrito/listado";
+}
+    
+    
 
     @PostMapping("/agregar")
     public String agregarProducto(HttpSession session,
             @RequestParam("idProducto") Long idProducto,
-            @RequestParam("cantidad") int cantidad) {
+            @RequestParam("cantidad") int cantidad,
+            Model model) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null && cantidad > 0) {
             carritoService.agregarProducto(usuario, idProducto, cantidad);
         } else {
             return "redirect:/auth/login";
         }
-        return "redirect:/carrito/listado";
+        return "redirect:/";
     }
 
-    @GetMapping("/eliminar/{id}")
-    public String eliminarProducto(@PathVariable("id") Long id, HttpSession session) {
+//    @PostMapping("/eliminar")
+//    public String eliminarProducto(HttpSession session, @RequestParam("idProducto") Long idProducto) {
+//        Usuario usuario = (Usuario) session.getAttribute("usuario");
+//        if (usuario != null) {
+//            carritoService.eliminarProductoPorIdProducto(usuario, idProducto);
+//        }
+//        return "listado :: #seccion-carrito";
+//    }
+    
+        @GetMapping("/eliminar/{id}")
+    public String eliminar(@PathVariable("id") Long id, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
             carritoService.eliminarProducto(usuario, id);
@@ -73,7 +114,7 @@ public class CarritoController {
         }
         int cantidad = carritoService.getCantidadProductos(usuario);
         model.addAttribute("cantidadCarrito", cantidad);
-        return "checkout";
+        return "carrito/checkout";
     }
 
     @PostMapping("/checkout")
@@ -91,6 +132,6 @@ public class CarritoController {
 
             carritoService.comprar(usuario);
         }
-        return "compra";
+        return "carrito/compra";
     }
 }

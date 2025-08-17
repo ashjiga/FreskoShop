@@ -12,7 +12,7 @@
             <div class="row" th:if="${favoritos != null}">
                 <div class="col-md-4 mb-4" th:each="fav : ${favoritos}">
                     <div class="card h-100">
-                        <img th:src="@{${fav.producto.rutaImagen}}" class="card-img-top" alt="..." height="200">
+                        <img th:src="@{${fav.producto.imagenUrl}}" class="card-img-top" alt="..." height="200">
                         <div class="card-body">
                             <h5 class="card-title" th:text="${fav.producto.descripcion}">[[#{lista.columna.nombre}]]</h5>
                             <p class="card-text">₡<span th:text="${fav.producto.precio}">[[#{lista.precio}]]</span></p>

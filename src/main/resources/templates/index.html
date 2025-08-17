@@ -70,52 +70,66 @@
         </div>
 
         <!-- Visualización de Productos -->
-        <div class="container mt-5">
-            <h2 class="text-center mb-4">Productos disponibles</h2>
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
+        {<div class="container mt-5">
+    <h2 class="text-center mb-4">Productos disponibles</h2>
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
 
-                <div class="col" th:each="producto : ${productos}">
-                    <div class="card card-product position-relative h-100">
-
-                        <a th:href="@{/producto/{id}(id=${producto.idProducto})}" class="text-reset text-decoration-none">
-                            <img th:src="${producto.rutaImagen}" class="card-img-top imagen-producto" alt="Producto">
-                                <div class="card-body p-2">
-                                    <h6 class="card-title mb-1" th:text="${producto.descripcion}">Nombre</h6>
-                                    <div class="small text-muted" th:text="'₡' + ${producto.precio}">₡0</div>
-                                </div>
-                        </a>
-
-                        <!-- Botón corazón (abajo-derecha) -->
-                        <div class="position-absolute bottom-0 end-0 p-2">
-
-                            <!-- Si está autenticado: toggle real -->
-                            <a sec:authorize="isAuthenticated()"
-                               th:href="@{/favorito/toggle/{id}(id=${producto.idProducto})}"
-                               class="btn-fav"
-                               th:classappend="${favoritosIds != null and favoritosIds.contains(producto.idProducto)} ? ' active' : ''"
-                               title="Favorito">
-                                <i class="fa-regular fa-heart icono-off"
-                                   th:classappend="${favoritosIds != null and favoritosIds.contains(producto.idProducto)} ? ' d-none' : ''"></i>
-                                <i class="fa-solid fa-heart icono-on"
-                                   th:classappend="${favoritosIds != null and favoritosIds.contains(producto.idProducto)} ? '' : ' d-none'"></i>
-                            </a>
-
-                            <!-- Si NO está autenticado: abrir modal -->
-                            <a sec:authorize="!isAuthenticated()"
-                               href="#"
-                               class="btn-fav"
-                               data-bs-toggle="modal"
-                               data-bs-target="#loginRequiredModal"
-                               title="Favorito">
-                                <i class="fa-regular fa-heart"></i>
-                            </a>
-
-</div>
-                        
+        <div class="col" th:each="producto : ${productos}">
+            <div class="card card-product position-relative h-100">
+                <a th:href="@{/producto/detalles/{id}(id=${producto.idProducto})}" class="text-reset text-decoration-none">
+                    <img th:src="@{${producto.imagenUrl}}" class="card-img-top" th:alt="${producto.descripcion}" style="height: 200px; object-fit: cover;">
+                    <div class="card-body p-2">
+                        <h6 class="card-title mb-1" th:text="${producto.descripcion}">Nombre</h6>
+                        <div class="small text-muted" th:text="'₡' + ${producto.precio}">₡0</div>
                     </div>
+                </a>
+
+                <div class="mt-auto p-2">
+                    <div th:if="${idsProductosEnCarrito != null and idsProductosEnCarrito.contains(producto.idProducto)}">
+                        <button class="btn btn-success btn-block w-100" disabled>
+                            Añadido al carrito!
+                        </button>
+                    </div>
+                    <div th:unless="${idsProductosEnCarrito != null and idsProductosEnCarrito.contains(producto.idProducto)}">
+                        <form th:action="@{/carrito/agregar}" method="post" class="add-to-cart-form">
+                            <input type="hidden" name="idProducto" th:value="${producto.idProducto}" />
+                            <input type="hidden" name="cantidad" value="1" />
+                            <button type="submit" class="btn btn-success btn-block w-100 add-to-cart-btn"
+                                    th:data-id="${producto.idProducto}">
+                                <span class="btn-text">[[#{carrito.add}]]</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="position-absolute top-0 end-0 p-2">
+
+                    <a sec:authorize="isAuthenticated()"
+                       th:href="@{/favorito/toggle/{id}(id=${producto.idProducto})}"
+                       class="btn-fav"
+                       th:classappend="${(favoritosIds != null and favoritosIds.contains(producto.idProducto))} ? ' active' : ''"
+                       title="Favorito">
+                        <i class="fa-regular fa-heart icono-off"
+                           th:classappend="${(favoritosIds != null and favoritosIds.contains(producto.idProducto))} ? ' d-none' : ''"></i>
+                        <i class="fa-solid fa-heart icono-on"
+                           th:classappend="${(favoritosIds != null and favoritosIds.contains(producto.idProducto))} ? '' : ' d-none'"></i>
+                    </a>
+
+                    <a sec:authorize="!isAuthenticated()"
+                       href="#"
+                       class="btn-fav"
+                       data-bs-toggle="modal"
+                       data-bs-target="#loginRequiredModal"
+                       title="Favorito">
+                        <i class="fa-regular fa-heart"></i>
+                    </a>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+        
+        
+        
         <footer th:replace="~{layout/plantilla :: footer}"></footer>
     </body>
 </html>

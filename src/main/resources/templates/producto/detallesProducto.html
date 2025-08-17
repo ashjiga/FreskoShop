@@ -1,42 +1,111 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="~{layout/plantilla :: head}">
-        <title th:text="${producto.descripcion}">Detalle del Producto</title>
-    </head>
-    <body>
-        <header th:replace="~{layout/plantilla :: header}"></header>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Detalles del Producto</title>
+</head>
+<body>
+<header th:replace="~{layout/plantilla :: header}"/>
 
-        <div class="container mt-5">
-            <div class="row">
-                <!-- Imagen del producto -->
-                <div class="col-md-5">
-                    <img th:src="@{${producto.rutaImagen}}" class="img-fluid rounded shadow" alt="Imagen del producto">
-                </div>
+<div class="container mt-5 mb-5">
+    <a th:href="@{/}" class="btn btn-outline-secondary mb-4">
+        <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+    </a>
 
-                <!-- Detalles del producto -->
-                <div class="col-md-7">
-                    <h2 th:text="${producto.descripcion}">Nombre del producto</h2>
-                    <p><strong>Precio:</strong> ₡<span th:text="${producto.precio}">0.00</span></p>
-                    <p><strong>Existencias:</strong> <span th:text="${producto.existencias}">0</span> disponibles</p>
-                    <p><strong>Detalle:</strong> <span th:text="${producto.detalle}">Descripción del producto</span></p>
+    <div th:if="${producto != null}" class="card shadow-lg border-0 mx-auto" style="max-width: 800px;">
+        <div class="row g-0">
+            <div class="col-md-6 d-flex align-items-center justify-content-center p-3 position-relative">
+                <img th:src="${producto.imagenUrl}" class="img-fluid rounded-start" th:alt="${producto.descripcion}" style="max-height: 500px; object-fit: cover;">
 
-                    <!-- Formulario para añadir al carrito -->
-                    <form th:action="@{/carrito/agregar}" method="post" class="mt-4">
-                        <input type="hidden" name="idProducto" th:value="${producto.idProducto}">
-                        <div class="form-group mb-3">
-                            <label for="cantidad">Cantidad:</label>
-                            <input type="number" id="cantidad" name="cantidad" class="form-control" min="1"
-                                   th:attr="max=${producto.existencias}" value="1" required>
-                        </div>
-                        <button type="submit" class="btn btn-success">
-                            Añadir al carrito 🛒
-                        </button>
-                        <a th:href="@{/}" class="btn btn-secondary ms-2">Volver</a>
-                    </form>
+                <a sec:authorize="isAuthenticated()"
+                   th:href="@{/favorito/toggle/{id}(id=${producto.idProducto})}"
+                   class="btn-fav"
+                   th:classappend="${favoritosIds != null and favoritosIds.contains(producto.idProducto)} ? ' active' : ''"
+                   title="Favorito">
+                    <i class="fa-regular fa-heart icono-off"
+                       th:classappend="${favoritosIds != null and favoritosIds.contains(producto.idProducto)} ? ' d-none' : ''"></i>
+                    <i class="fa-solid fa-heart icono-on"
+                       th:classappend="${favoritosIds != null and favoritosIds.contains(producto.idProducto)} ? '' : ' d-none'"></i>
+                </a>
+
+                <!-- Si NO está autenticado: abrir modal -->
+                <a sec:authorize="!isAuthenticated()"
+                   href="#"
+                   class="btn-fav"
+                   data-bs-toggle="modal"
+                   data-bs-target="#loginRequiredModal"
+                   title="Favorito">
+                    <i class="fa-regular fa-heart"></i>
+                </a>
+
+            </div>
+
+            <!-- Columna para la información del producto -->
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h1 class="card-title text-success" th:text="${producto.descripcion}">Nombre del Producto</h1>
+                    <p class="lead text-muted" th:text="${producto.categoria.descripcion}">Categoría</p>
+                    <hr>
+                    <div class="mb-3">
+                        <p class="card-text">[[#{producto.precio}]]: <span class="fw-bold text-success" th:text="'₡' + ${producto.precio}">₡0.00</span></p>
+                        <p class="card-text">[[#{producto.existencias}]]: <span class="fw-bold" th:text="${producto.existencias}">0</span></p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="fw-bold">Descripción:</p>
+                        <p class="card-text" th:text="${producto.detalle}">Descripción detallada del producto...</p>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/carrito/agregar/{id}(id=${producto.idProducto})}" class="btn btn-success btn-lg">
+                            <i class="fas fa-shopping-cart"></i> [[#{accion.añadir.carrito}]]
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div th:unless="${producto != null}" class="alert alert-warning text-center mt-5" role="alert">
+        <i class="fas fa-exclamation-triangle"></i> Producto no encontrado.
+    </div>
 
-        <footer th:replace="~{layout/plantilla :: footer}"></footer>
-    </body>
+    <!-- Sección de Productos Relacionados -->
+    <div class="container mt-5">
+        <h3 class="text-center mb-4">Productos Relacionados</h3>
+        <div class="row row-cols-1 row-cols-md-4 g-4 text-center">
+            <div th:each="relacionado : ${productosRelacionados}" class="col">
+                <div class="card h-100 shadow-sm">
+                    <img th:src="${relacionado.imagenUrl}" class="card-img-top" th:alt="${relacionado.descripcion}" style="height: 150px; object-fit: contain;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" th:text="${relacionado.descripcion}">Producto Relacionado</h5>
+                        <p class="card-text fw-bold text-success" th:text="'₡' + ${relacionado.precio}">₡0.00</p>
+                        <a th:href="@{/producto/detalles/{id}(id=${relacionado.idProducto})}" class="btn btn-sm btn-outline-success">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para requerir login (si no está autenticado) -->
+<div class="modal fade" id="loginRequiredModal" tabindex="-1" aria-labelledby="loginRequiredModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginRequiredModalLabel">Acción no permitida</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Para agregar un producto a favoritos, debes iniciar sesión.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a th:href="@{/login}" class="btn btn-primary">Ir a Iniciar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer th:replace="~{layout/plantilla :: footer}"></footer>
+</body>
 </html>
