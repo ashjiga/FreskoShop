@@ -19,271 +19,275 @@
                     <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
                     <script th:src="@{/js/ajax-handler.js}"></script>
                     <script th:src="@{/js/rutinas.js}"></script>
-                    <style>             
-                        
-            input::-webkit-outer-spin-button,
-            input::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
+                    <style>
+                        input::-webkit-outer-spin-button,
+                        input::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                        }
+                        input[type=number] {
+                            -moz-appearance: textfield;
+                        }
 
-            input[type=number] {
-                -moz-appearance: textfield;
-            }
+                        body {
+                            font-family: 'Inter', sans-serif;
+                            background-color: #e0f2f7;
+                        }
+                        .header-main-nav {
+                            background-color: #ffffff;
+                            padding: 1rem 0;
+                        }
+                        .header-main-nav .navbar-brand {
+                            color: #004d66 !important;
+                            font-size: 3.5rem;
+                            font-weight: bold;
+                            margin: 0 auto;
+                        }
+                        .header-bottom-bar {
+                            background-color: #004d66;
+                            padding: 1rem 0;
+                            border-radius: 0 0 10px 10px;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+                        .header-bottom-bar .btn {
+                            margin-left: 10px;
+                            border-radius: 8px;
+                            padding: 8px 15px;
+                        }
+                        .btn-info {
+                            background-color: #87ceeb;
+                            border-color: #87ceeb;
+                            color: #004d66;
+                        }
+                        .btn-info:hover {
+                            background-color: #64b5f6;
+                            border-color: #64b5f6;
+                        }
+                        .btn-light {
+                            background-color: #ffffff;
+                            border-color: #ffffff;
+                            color: #004d66;
+                        }
+                        .btn-light:hover {
+                            background-color: #e0e0e0;
+                            border-color: #e0e0e0;
+                        }
+                        .lang-dropdown .dropdown-toggle {
+                            background-color: #e0f2f7;
+                            color: #004d66;
+                            border: 1px solid #cce7f0;
+                            border-radius: 8px;
+                            padding: 5px 10px;
+                            font-weight: bold;
+                        }
+                        .lang-dropdown .dropdown-menu {
+                            background-color: #e0f2f7;
+                        }
+                        .lang-dropdown .dropdown-item {
+                            color: #004d66;
+                        }
+                        .lang-dropdown .dropdown-item:hover {
+                            background-color: #cce7f0;
+                        }
+                        .seccion-busqueda {
+                            background-color: #e0f2f7;
+                            padding: 1rem 0;
+                            margin-top: 0;
+                        }
+                        .input-busqueda {
+                            background-color: #d1dddd;
+                            border: none;
+                            border-radius: 10px;
+                            padding-left: 45px;
+                            height: 45px;
+                            color: #333;
+                        }
+                        .input-busqueda::placeholder {
+                            color: #6c757d;
+                        }
+                        .search-icon-position {
+                            position: absolute;
+                            top: 50%;
+                            left: 15px;
+                            transform: translateY(-50%);
+                            color: #6c757d;
+                            font-size: 1.2em;
+                        }
+                        .menu-categorias {
+                            background-color: #004d66;
+                            border-radius: 10px;
+                            box-shadow: 0 4px 6px rgba(0,0,0,.2);
+                            padding: 15px 0;
+                            margin-top: 20px;
+                            display: flex;
+                            justify-content: space-around;
+                            flex-wrap: wrap;
+                        }
+                        .categoria-item {
+                            text-align: center;
+                            color: #ffffff;
+                            margin: 10px;
+                            text-decoration: none;
+                        }
+                        .categoria-item:hover {
+                            color: #87ceeb;
+                        }
+                        .categoria-icono {
+                            background-color: #7ed6df;
+                            border-radius: 50%;
+                            width: 70px;
+                            height: 70px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin: auto;
+                            font-size: 2em;
+                            color: #004d66;
+                            margin-bottom: 5px;
+                        }
+                        .categoria-icono i {
+                            color: #004d66;
+                        }
+                        .card-product {
+                            max-width: 12rem;
+                            border-radius: .75rem;
+                            overflow: hidden;
+                        }
+                        .imagen-producto {
+                            height: 170px;
+                            object-fit: cover;
+                        }
+                        .btn-fav {
+                            background: rgba(255,255,255,.9);
+                            border-radius: 999px;
+                            padding: .35rem .5rem;
+                            display: inline-flex;
+                            align-items:center;
+                            justify-content:center;
+                        }
+                        .btn-fav:hover {
+                            background: #fff;
+                        }
+                        .btn-fav .icono-on {
+                            color: #e63946;
+                        }
+                        .btn-fav .icono-off {
+                            color: #555;
+                        }
+                    </style>
+                    </head>
 
-            body {
-                font-family: 'Inter', sans-serif;
-                background-color: #e0f2f7;
-            }
-            .header-main-nav {
-                background-color: #ffffff;
-                padding: 1rem 0;
-            }
-            .header-main-nav .navbar-brand {
-                color: #004d66 !important;
-                font-size: 3.5rem;
-                font-weight: bold;
-                margin: 0 auto;
-            }
-            .header-bottom-bar {
-                background-color: #004d66;
-                padding: 1rem 0;
-                border-radius: 0 0 10px 10px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .header-bottom-bar .btn {
-                margin-left: 10px;
-                border-radius: 8px;
-                padding: 8px 15px;
-            }
-            .btn-info {
-                background-color: #87ceeb;
-                border-color: #87ceeb;
-                color: #004d66;
-            }
-            .btn-info:hover {
-                background-color: #64b5f6;
-                border-color: #64b5f6;
-            }
-            .btn-light {
-                background-color: #ffffff;
-                border-color: #ffffff;
-                color: #004d66;
-            }
-            .btn-light:hover {
-                background-color: #e0e0e0;
-                border-color: #e0e0e0;
-            }
-            .lang-dropdown .dropdown-toggle {
-                background-color: #e0f2f7;
-                color: #004d66;
-                border: 1px solid #cce7f0;
-                border-radius: 8px;
-                padding: 5px 10px;
-                font-weight: bold;
-            }
-            .lang-dropdown .dropdown-menu {
-                background-color: #e0f2f7;
-            }
-            .lang-dropdown .dropdown-item {
-                color: #004d66;
-            }
-            .lang-dropdown .dropdown-item:hover {
-                background-color: #cce7f0;
-            }
-            .seccion-busqueda {
-                background-color: #e0f2f7;
-                padding: 1rem 0;
-                margin-top: 0;
-            }
-            .input-busqueda {
-                background-color: #d1dddd;
-                border: none;
-                border-radius: 10px;
-                padding-left: 45px;
-                height: 45px;
-                color: #333;
-            }
-            .input-busqueda::placeholder {
-                color: #6c757d;
-            }
-            .search-icon-position {
-                position: absolute;
-                top: 50%;
-                left: 15px;
-                transform: translateY(-50%);
-                color: #6c757d;
-                font-size: 1.2em;
-            }
-            .menu-categorias {
-                background-color: #004d66;
-                border-radius: 10px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-                padding: 15px 0;
-                margin-top: 20px;
-                display: flex;
-                justify-content: space-around;
-                flex-wrap: wrap;
-            }
-            .categoria-item {
-                text-align: center;
-                color: #ffffff;
-                margin: 10px;
-                text-decoration: none;
-            }
-            .categoria-item:hover {
-                color: #87ceeb;
-            }
-            .categoria-icono {
-                background-color: #7ed6df;
-                border-radius: 50%;
-                width: 70px;
-                height: 70px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin: auto;
-                font-size: 2em;
-                color: #004d66;
-                margin-bottom: 5px;
-            }
-            .categoria-icono i {
-                color: #004d66;
-            }
-            .card-product {
-                max-width: 12rem;
-                border-radius: .75rem;
-                overflow: hidden;
-            }
-            .imagen-producto {
-                height: 170px;
-                object-fit: cover;
-            }
-            .btn-fav {
-                background: rgba(255,255,255,.9);
-                border-radius: 999px;
-                padding: .35rem .5rem;
-                display: inline-flex;
-                align-items:center;
-                justify-content:center;
-            }
-            .btn-fav:hover {
-                background: #fff;
-            }
-            .btn-fav .icono-on {
-                color: #e63946;
-            }
-            .btn-fav .icono-off {
-                color: #555;
-            }
-        </style>
-    </head>
+                    <body>
+                        <header th:fragment="header">
+                            <div class="header-top-bar"></div>
 
-    <body>
-        <header th:fragment="header">
-            <div class="header-top-bar"></div>
+                            <nav class="navbar navbar-expand-lg header-main-nav">
+                                <div class="container d-flex justify-content-between align-items-center">
+                                    <ul class="navbar-nav lang-dropdown">
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                                [[#{plantilla.idioma}]]
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item" th:href="@{/(lang=es)}">ES</a></li>
+                                                <li><a class="dropdown-item" th:href="@{/(lang=en)}">EN</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                    <a th:href="@{/}" class="navbar-brand">Fresko</a>
+                                    <div style="width: 100px;"></div>
+                                </div>
+                            </nav>
 
-            <nav class="navbar navbar-expand-lg header-main-nav">
-                <div class="container d-flex justify-content-between align-items-center">
-                    <ul class="navbar-nav lang-dropdown">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                [[#{plantilla.idioma}]]
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" th:href="@{/(lang=es)}">ES</a></li>
-                                <li><a class="dropdown-item" th:href="@{/(lang=en)}">EN</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <a th:href="@{/}" class="navbar-brand">Fresko</a>
-                    <div style="width: 100px;"></div>
-                </div>
-            </nav>
+                            <div class="container-fluid header-bottom-bar d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div th:if="${vistaFavoritos}">
+                                        <a class="btn btn-light ms-2" th:href="@{/}">
+                                            <i class="bi bi-arrow-left"></i> [[#{accion.regresar}]]
+                                        </a>
+                                    </div>
+                                </div>
 
-            <div class="container-fluid header-bottom-bar d-flex justify-content-between align-items-center">
-                <div>
-                    <div th:if="${vistaFavoritos}">
-                        <a class="btn btn-light ms-2" th:href="@{/}">
-                            <i class="bi bi-arrow-left"></i> [[#{accion.regresar}]]
-                        </a>
-                    </div>
-                </div>
+                                <div class="d-flex">
+                                    <div sec:authorize="!isAuthenticated()" class="me-2">
+                                        <a class="btn btn-info ms-2" th:href="@{/auth/registro}">[[#{accion.registrarse}]]</a>
+                                        <a class="btn btn-light ms-2" th:href="@{/auth/login}">[[#{accion.iniciar.sesion}]]</a>
+                                    </div>
 
-                <div class="d-flex">
-                    <div sec:authorize="!isAuthenticated()" class="me-2">
-                        <a class="btn btn-info ms-2" th:href="@{/auth/registro}">[[#{accion.registrarse}]]</a>
-                        <a class="btn btn-light ms-2" th:href="@{/auth/login}">[[#{accion.iniciar.sesion}]]</a>
-                    </div>
+                                    <div sec:authorize="isAuthenticated()" class="d-flex align-items-center me-2">
+                                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')">
+                                            <a class="btn btn-primary ms-2 me-2" th:href="@{/usuario/listado}">
+                                                <i class="fas fa-users"></i> [[#{admin.ver.usuarios}]]
+                                            </a>
+                                            <a class="btn btn-success ms-2 me-2" th:href="@{/producto/listado}">
+                                                <i class="fas fa-box"></i> [[#{producto.gestionar}]]
+                                            </a>
+                                        </div>
+                                        <form th:action="@{/logout}" method="post" class="ms-2 me-2" style="display:inline;">
+                                            <button type="submit" class="btn btn-light">[[#{accion.cerrar.sesion}]]</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div sec:authorize="isAuthenticated()" class="d-flex align-items-center me-2">
-                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TRABAJADOR')">
-                            <a class="btn btn-primary ms-2 me-2" th:href="@{/usuario/listado}">
-                                <i class="fas fa-users"></i> [[#{admin.ver.usuarios}]]
-                            </a>
-                            <a class="btn btn-success ms-2 me-2" th:href="@{/producto/listado}">
-                                <i class="fas fa-box"></i> [[#{producto.gestionar}]]
-                            </a>
-                        </div>
-                        <form th:action="@{/logout}" method="post" class="ms-2 me-2" style="display:inline;">
-                            <button type="submit" class="btn btn-light">[[#{accion.cerrar.sesion}]]</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            
+                            <div class="container-fluid py-3 d-flex justify-content-between align-items-center seccion-busqueda">
+                                <a class="btn btn-dark position-relative" th:href="@{/carrito/listado}"
+                                   style="background-color: #004d66; border-color: #004d66; color: white;">
+                                    <i class="bi bi-cart"></i> [[#{plantilla.mi.carrito}]]
+                                    <span th:if="${session.usuario != null and cantidadCarrito > 0}"
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
+                                          th:text="${cantidadCarrito}">0</span>
+                                </a>
 
-            <div class="container-fluid py-3 d-flex justify-content-between align-items-center seccion-busqueda">
-                <a class="btn btn-dark position-relative" th:href="@{/carrito/listado}"
-                   style="background-color: #004d66; border-color: #004d66; color: white;">
-                    <i class="bi bi-cart"></i> [[#{plantilla.mi.carrito}]]
-                    <span th:if="${session.usuario != null and cantidadCarrito > 0}"
-                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
-                          th:text="${cantidadCarrito}">0</span>
-                </a>
+                                <!-- BUSCADOR: GET a la URL actual con parámetro q -->
+                                <div class="flex-grow-1 mx-3 position-relative">
+                                    <form method="get" class="position-relative">
+                                        <input type="text"
+                                               name="q"
+                                               th:value="${q}"
+                                               class="form-control input-busqueda w-100"
+                                               th:placeholder="#{plantilla.buscar}" />
+                                        <i class="fas fa-search search-icon-position"></i>
+                                    </form>
+                                </div>
 
-                <div class="flex-grow-1 mx-3 position-relative">
-                    <input type="text" class="form-control input-busqueda w-100" th:placeholder="#{plantilla.buscar}" />
-                    <i class="fas fa-search search-icon-position"></i>
-                </div>
+                                <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
+                                    <a class="btn btn-dark me-2" th:unless="${vistaFavoritos}" th:href="@{/favorito/listado}"
+                                       style="background-color: #004d66; border-color: #004d66; color: white;">
+                                        <i class="bi bi-heart"></i> [[#{plantilla.mi.lista}]]
+                                    </a>
+                                </div>
+                            </div>
+                        </header>
 
-                <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
-                    <a class="btn btn-dark me-2" th:unless="${vistaFavoritos}" th:href="@{/favorito/listado}"
-                       style="background-color: #004d66; border-color: #004d66; color: white;">
-                        <i class="bi bi-heart"></i> [[#{plantilla.mi.lista}]]
-                    </a>
-                </div>
-            </div>
-        </header>
+                        <th:block th:fragment="footer">
+                            <footer class="bg-secondary text-white mt-5 p-2">
+                                <div class="container">
+                                    <p class="lead text-center">&copy; [[#{plantilla.derechos}]]</p>
+                                </div>
+                            </footer>
 
-        <th:block th:fragment="footer">
-            <footer class="bg-secondary text-white mt-5 p-2">
-                <div class="container">
-                    <p class="lead text-center">&copy; [[#{plantilla.derechos}]]</p>
-                </div>
-            </footer>
+                            <!-- Modal global: debe estar dentro del fragmento -->
+                            <div class="modal fade" id="loginRequiredModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Inicia sesión para guardar favoritos</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Para usar la lista de favoritos necesitas estar registrado e iniciar sesión.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a th:href="@{/auth/login}" class="btn btn-primary">Iniciar sesión</a>
+                                            <a th:href="@{/auth/registro}" class="btn btn-outline-secondary">Registrarse</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
 
-            <!-- Modal global: debe estar dentro del fragmento -->
-            <div class="modal fade" id="loginRequiredModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Inicia sesión para guardar favoritos</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div class="modal-body">
-                            Para usar la lista de favoritos necesitas estar registrado e iniciar sesión.
-                        </div>
-                        <div class="modal-footer">
-                            <a th:href="@{/auth/login}" class="btn btn-primary">Iniciar sesión</a>
-                            <a th:href="@{/auth/registro}" class="btn btn-outline-secondary">Registrarse</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </th:block>
-        
-    </body>
-</html>
+                    </body>
+                    </html>

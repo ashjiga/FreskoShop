@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Factura</title>
+        <style>
+            @media print {
+                .no-print {
+                    display: none !important;
+                }
+                .card {
+                    box-shadow: none !important;
+                    border: 0 !important;
+                }
+                body {
+                    background: #fff !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}" class="no-print"></header>
+
+        <div class="container my-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 th:text="${tienda}">FreskoShop</h3>
+                            <div th:text="'Cliente: ' + ${cliente}">Cliente: -</div>
+                        </div>
+                        <div class="text-end">
+                            <div th:text="'Fecha/hora: ' + ${#temporals.format(fecha, 'dd/MM/yyyy HH:mm')}">Fecha</div>
+                            <div>Factura</div>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th class="text-center">Cant.</th>
+                                    <th class="text-end">Precio</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="it : ${items}">
+                                    <td th:text="${it.descripcion}">Producto</td>
+                                    <td class="text-center" th:text="${it.cantidad}">1</td>
+                                    <td class="text-end" th:text="'₡' + ${#numbers.formatDecimal(it.precio,0,'POINT',2,'COMMA')}">₡0,00</td>
+                                    <td class="text-end" th:text="'₡' + ${#numbers.formatDecimal(it.total,0,'POINT',2,'COMMA')}">₡0,00</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3" class="text-end">Subtotal</th>
+                                    <th class="text-end" th:text="'₡' + ${#numbers.formatDecimal(subtotal,0,'POINT',2,'COMMA')}">₡0,00</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" class="text-end">Impuestos (13%)</th>
+                                    <th class="text-end" th:text="'₡' + ${#numbers.formatDecimal(impuestos,0,'POINT',2,'COMMA')}">₡0,00</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" class="text-end">TOTAL</th>
+                                    <th class="text-end text-success" th:text="'₡' + ${#numbers.formatDecimal(total,0,'POINT',2,'COMMA')}">₡0,00</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <p class="mt-4 text-center">¡Gracias por su compra!</p>
+
+                    <div class="d-flex justify-content-center gap-2 no-print">
+                        <button class="btn btn-success" onclick="window.print()">Imprimir / Guardar PDF</button>
+                        <a th:href="@{/}" class="btn btn-outline-secondary">Volver al Inicio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{layout/plantilla :: footer}" class="no-print"></footer>
+    </body>
+</html>

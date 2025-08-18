@@ -7,6 +7,8 @@ import com.fresko.domain.Categoria;
 import com.fresko.service.ProductoService;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,8 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductoServiceImpl.class);
+
     @Autowired
     private ProductoDao productoDao;
+
     @Autowired
     private FirebaseStorageService storageService;
 
@@ -58,14 +63,19 @@ public class ProductoServiceImpl implements ProductoService {
         return productoDao.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
     }
-    
-   
- @Override
+
+    @Override
     @Transactional
     public void save(Producto p, MultipartFile imagen) {
-        if (imagen != null && !imagen.isEmpty()) {
-            String url = storageService.uploadFile(imagen, "productos");
-            p.setImagenUrl(url);
+        // Subir SOLO si viene archivo real
+        if (imagen != null && !imagen.isEmpty() && imagen.getSize() > 0) {
+            try {
+                String url = storageService.uploadFile(imagen, "productos");
+                p.setImagenUrl(url);
+            } catch (Exception e) {
+                // No tumbar el flujo si la subida falla
+                log.warn("No se pudo subir la imagen del producto nuevo: {}", e.getMessage());
+            }
         }
         productoDao.save(p);
     }
@@ -74,16 +84,55 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional
     public void update(Producto p, MultipartFile imagen) {
         Producto existente = productoDao.findById(p.getIdProducto()).orElseThrow();
-        if (imagen != null && !imagen.isEmpty()) {
-            if (existente.getImagenUrl() != null) {
-                storageService.deleteByUrl(existente.getImagenUrl());
+
+        String urlNueva = null;
+        if (imagen != null && !imagen.isEmpty() && imagen.getSize() > 0) {
+            try {
+                urlNueva = storageService.uploadFile(imagen, "productos");
+            } catch (Exception e) {
+                log.warn("No se pudo subir la nueva imagen del producto {}: {}", p.getIdProducto(), e.getMessage());
             }
-            String url = storageService.uploadFile(imagen, "productos");
-            p.setImagenUrl(url);
+        }
+
+        if (urlNueva != null) {
+            // Subida OK -> borrar la anterior (si existía) y asignar la nueva
+            if (existente.getImagenUrl() != null) {
+                try {
+                    storageService.deleteByUrl(existente.getImagenUrl());
+                } catch (Exception e) {
+                    // No interrumpir la actualización si falla el borrado
+                    log.warn("No se pudo borrar la imagen anterior del producto {}: {}", p.getIdProducto(), e.getMessage());
+                }
+            }
+            p.setImagenUrl(urlNueva);
         } else {
+            // No hubo subida nueva: conservar la URL existente
             p.setImagenUrl(existente.getImagenUrl());
         }
+
         productoDao.save(p);
     }
+
+    //Búsqueda
+    @Override
+    public List<Producto> buscarProductos(String q, boolean activos) {
+        if (q == null || q.isBlank()) {
+            return getProductos(activos);
+        }
+        String texto = q.trim();
+        if (activos) {
+            return productoDao.findByActivoTrueAndDescripcionContainingIgnoreCase(texto);
+        } else {
+            return productoDao.findByDescripcionContainingIgnoreCase(texto);
+        }
+    }
+
+    @Override
+    public List<Producto> buscarProductosPorCategoria(String categoria, String q) {
+        if (q == null || q.isBlank()) {
+            return getProductosPorCategoria(categoria);
+        }
+        return productoDao.findByCategoriaDescripcionIgnoreCaseAndActivoTrueAndDescripcionContainingIgnoreCase(
+                categoria, q.trim());
+    }
 }
-    

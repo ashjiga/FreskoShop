@@ -15,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,10 +28,10 @@ public class ProductoController {
     private final FavoritoService favoritoService;
 
     public ProductoController(ProductoService productoService,
-                              CarritoService carritoService,
-                              CategoriaService categoriaService,
-                              UsuarioService usuarioService,
-                              FavoritoService favoritoService) {
+            CarritoService carritoService,
+            CategoriaService categoriaService,
+            UsuarioService usuarioService,
+            FavoritoService favoritoService) {
         this.productoService = productoService;
         this.carritoService = carritoService;
         this.categoriaService = categoriaService;
@@ -42,9 +41,13 @@ public class ProductoController {
 
     @GetMapping("/producto/listado")
     @Secured({"ROLE_ADMIN", "ROLE_TRABAJADOR"})
-    public String listado(Model model) {
-        var productos = productoService.getProductos(true);
+    public String listado(@RequestParam(value = "q", required = false) String q,
+            Model model) {
+        var productos = (q != null && !q.isBlank())
+                ? productoService.buscarProductos(q, true)
+                : productoService.getProductos(true);
         model.addAttribute("productos", productos);
+        model.addAttribute("q", q);
         return "producto/listado";
     }
 
@@ -53,14 +56,14 @@ public class ProductoController {
         var producto = productoService.getProductoPorId(id);
         model.addAttribute("producto", producto);
 
-    // Obtener productos relacionados
-    var productosRelacionados = productoService.getProductosPorCategoria(producto.getCategoria().getDescripcion());
-    // Filtrar para excluir el producto actual
-    productosRelacionados = productosRelacionados.stream()
-            .filter(p -> !p.getIdProducto().equals(id))
-            .collect(Collectors.toList());    
-    model.addAttribute("productosRelacionados", productosRelacionados);
-    
+        // Productos relacionados (excluye el actual)
+        var productosRelacionados = productoService
+                .getProductosPorCategoria(producto.getCategoria().getDescripcion())
+                .stream()
+                .filter(p -> !p.getIdProducto().equals(id))
+                .collect(Collectors.toList());
+        model.addAttribute("productosRelacionados", productosRelacionados);
+
         if (auth != null && auth.isAuthenticated()) {
             var usuario = usuarioService.getUsuarioPorUsername(auth.getName());
             var favs = favoritoService.getFavoritosDeUsuario(usuario.getIdUsuario());
@@ -88,43 +91,60 @@ public class ProductoController {
         return "producto/formulario";
     }
 
-    /** Guardar (crea o actualiza según tenga id) */
     @PostMapping("/producto/guardar")
     @Secured({"ROLE_ADMIN", "ROLE_TRABAJADOR"})
     public String productoGuardar(@Valid @ModelAttribute Producto producto,
-                                  BindingResult result,
-                                  @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile,
-                                  Model model,
-                                  RedirectAttributes ra) {
+            BindingResult result,
+            @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile,
+            @RequestParam(value = "archivo", required = false) MultipartFile archivo,
+            Model model,
+            RedirectAttributes ra) {
         if (result.hasErrors()) {
             model.addAttribute("categorias", categoriaService.getCategorias(true));
             return "producto/formulario";
         }
+
+        // Elige el archivo que realmente viene con contenido
+        MultipartFile fileParaSubir = null;
+        if (imagenFile != null && !imagenFile.isEmpty() && imagenFile.getSize() > 0) {
+            fileParaSubir = imagenFile;
+        } else if (archivo != null && !archivo.isEmpty() && archivo.getSize() > 0) {
+            fileParaSubir = archivo;
+        }
+
         if (producto.getIdProducto() == null) {
-            productoService.save(producto, imagenFile);      // <-- sube a Firebase si viene archivo
+            productoService.save(producto, fileParaSubir);
             ra.addFlashAttribute("mensaje", "Producto creado exitosamente!");
         } else {
-            productoService.update(producto, imagenFile);    // <-- reemplaza imagen si viene nueva
+            productoService.update(producto, fileParaSubir);
             ra.addFlashAttribute("mensaje", "Producto actualizado exitosamente!");
         }
         return "redirect:/producto/listado";
     }
 
-    /** Ruta extra por si tu formulario apunta a /producto/modificar/{id} */
     @PostMapping("/producto/modificar/{id}")
     @Secured({"ROLE_ADMIN", "ROLE_TRABAJADOR"})
     public String productoModificar(@PathVariable Long id,
-                                    @Valid @ModelAttribute Producto producto,
-                                    BindingResult result,
-                                    @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile,
-                                    Model model,
-                                    RedirectAttributes ra) {
+            @Valid @ModelAttribute Producto producto,
+            BindingResult result,
+            @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile,
+            @RequestParam(value = "archivo", required = false) MultipartFile archivo,
+            Model model,
+            RedirectAttributes ra) {
         if (result.hasErrors()) {
             model.addAttribute("categorias", categoriaService.getCategorias(true));
             return "producto/formulario";
         }
         producto.setIdProducto(id);
-        productoService.update(producto, imagenFile);
+
+        MultipartFile fileParaSubir = null;
+        if (imagenFile != null && !imagenFile.isEmpty() && imagenFile.getSize() > 0) {
+            fileParaSubir = imagenFile;
+        } else if (archivo != null && !archivo.isEmpty() && archivo.getSize() > 0) {
+            fileParaSubir = archivo;
+        }
+
+        productoService.update(producto, fileParaSubir);
         ra.addFlashAttribute("mensaje", "Producto actualizado exitosamente!");
         return "redirect:/producto/listado";
     }
@@ -136,40 +156,50 @@ public class ProductoController {
         productoService.delete(producto);
         return "redirect:/producto/listado";
     }
-
-@GetMapping({"/", "/index"})
-public String index(Model model, Authentication auth) {
-    var productos = productoService.getProductos(true);
-    model.addAttribute("productos", productos);
-
-    var favoritosIds = java.util.Collections.emptySet();
-    var idsProductosEnCarrito = java.util.Collections.emptySet();
     
-    if (auth != null && auth.isAuthenticated()) {
-        var usuario = usuarioService.getUsuarioPorUsername(auth.getName());
-        
-        // Cargar y añadir los IDs de los favoritos
-        var favs = favoritoService.getFavoritosDeUsuario(usuario.getIdUsuario());
-        favoritosIds = favs.stream()
-                .map(f -> f.getProducto().getIdProducto())
-                .collect(java.util.stream.Collectors.toSet());
-                
-        // Cargar y añadir los IDs de los productos en el carrito
-        var productosEnCarrito = carritoService.getCarritoPorUsuario(usuario);
-        idsProductosEnCarrito = productosEnCarrito.stream()
-                .map(item -> item.getProducto().getIdProducto())
-                .collect(java.util.stream.Collectors.toSet());
+    @GetMapping({"/", "/index"})
+    public String index(@RequestParam(value = "q", required = false) String q,
+            Model model, Authentication auth) {
+
+        var productos = (q != null && !q.isBlank())
+                ? productoService.buscarProductos(q, true)
+                : productoService.getProductos(true);
+        model.addAttribute("productos", productos);
+        model.addAttribute("q", q);
+
+        var favoritosIds = java.util.Collections.<Long>emptySet();
+        var idsProductosEnCarrito = java.util.Collections.<Long>emptySet();
+
+        if (auth != null && auth.isAuthenticated()) {
+            var usuario = usuarioService.getUsuarioPorUsername(auth.getName());
+
+            var favs = favoritoService.getFavoritosDeUsuario(usuario.getIdUsuario());
+            favoritosIds = favs.stream()
+                    .map(f -> f.getProducto().getIdProducto())
+                    .collect(java.util.stream.Collectors.toSet());
+
+            var productosEnCarrito = carritoService.getCarritoPorUsuario(usuario);
+            idsProductosEnCarrito = productosEnCarrito.stream()
+                    .map(item -> item.getProducto().getIdProducto())
+                    .collect(java.util.stream.Collectors.toSet());
+        }
+
+        model.addAttribute("favoritosIds", favoritosIds);
+        model.addAttribute("idsProductosEnCarrito", idsProductosEnCarrito);
+        return "index";
     }
-    
-    model.addAttribute("favoritosIds", favoritosIds);
-    model.addAttribute("idsProductosEnCarrito", idsProductosEnCarrito); // Esta línea es la clave
-    return "index";
-}
+
     @GetMapping("/{categoria}")
-    public String filtrarPorCategoria(@PathVariable("categoria") String categoria, Model model) {
-        List<Producto> productos = productoService.getProductosPorCategoria(categoria);
+    public String filtrarPorCategoria(@PathVariable("categoria") String categoria,
+            @RequestParam(value = "q", required = false) String q,
+            Model model) {
+        List<Producto> productos = (q != null && !q.isBlank())
+                ? productoService.buscarProductosPorCategoria(categoria, q)
+                : productoService.getProductosPorCategoria(categoria);
+
         model.addAttribute("productos", productos);
         model.addAttribute("categoriaSeleccionada", categoria);
+        model.addAttribute("q", q);
         return "index";
     }
 

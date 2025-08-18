@@ -1,131 +1,136 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{layout/plantilla :: head}">
-    <title>Gestión de Productos</title>
-</head>
-<body>
-<header th:replace="~{layout/plantilla :: header}"/>
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Gestión de Productos</title>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4" th:text="#{producto.formulario.titulo}">Gestión de Productos</h2>
+        <div class="container mt-5">
+            <h2 class="text-center mb-4" th:text="#{producto.formulario.titulo}">Gestión de Productos</h2>
 
-    <div class="row">
-        <div class="col-md-6 d-flex justify-content-center align-items-start">
-            <div class="card shadow-sm preview-card" style="width: 18rem;">
-                <div class="card-img-top preview-img-container">
-                    <img id="previewImage"
-                         th:src="${producto.imagenUrl}"
-                         th:if="${producto.imagenUrl}"
-                         class="img-fluid"
-                         alt="Vista previa de la imagen">
-                    <img id="previewImagePlaceholder"
-                         th:unless="${producto.imagenUrl}"
-                         src="/images/placeholder-product.png"
-                         class="img-fluid"
-                         alt="Sin imagen">        
-                </div>
-                <div class="card-body text-center">
-                    <h5 class="card-title" id="previewTitulo" th:text="${producto.descripcion}">Nombre del Producto</h5>
-                    <p class="card-text text-success fw-bold" id="previewPrecio" th:text="'₡' + ${producto.precio}">₡0.00</p>
-                    <a href="#" class="btn btn-primary" th:text="#{accion.añadir.carrito}">Añadir al Carrito</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card p-4 shadow-sm">
-                <form th:action="@{/producto/guardar}" th:object="${producto}" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" th:field="*{idProducto}"/>
-                    <input type="hidden" th:field="*{imagenUrl}"/>
-
-                    <div class="mb-3">
-                        <label for="descripcion" class="form-label" th:text="#{producto.descripcion}">Descripción:</label>
-                        <input type="text" id="descripcion" class="form-control" th:field="*{descripcion}" required oninput="updatePreview()"/>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="categoria" class="form-label" th:text="#{producto.categoria}">Categoría:</label>
-                        <select id="categoria" class="form-select" th:field="*{categoria}" required>
-                            <option th:each="categoria : ${categorias}"
-                                    th:value="${categoria.idCategoria}"
-                                    th:text="${categoria.descripcion}"></option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="precio" class="form-label" th:text="#{producto.precio}">Precio:</label>
-                        <input type="number" id="precio" class="form-control" th:field="*{precio}" min="0.01" step="0.01" required oninput="updatePreview()"/>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="existencias" class="form-label" th:text="#{producto.existencias}">Existencias:</label>
-                        <input type="number" id="existencias" class="form-control" th:field="*{existencias}" min="0" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="imagen" class="form-label" th:text="#{producto.imagen}">Imagen:</label>
-                        <div class="input-group">
-                            <input type="file" id="imagen" name="imagenFile" class="form-control" onchange="updateImagePreview(this)">
+            <div class="row">
+                <div class="col-md-6 d-flex justify-content-center align-items-start">
+                    <div class="card shadow-sm preview-card" style="width: 18rem;">
+                        <div class="card-img-top preview-img-container">
+                            <img id="previewImage"
+                                 th:src="${producto.imagenUrl}"
+                                 th:if="${producto.imagenUrl}"
+                                 class="img-fluid"
+                                 alt="Vista previa de la imagen">
+                            <img id="previewImagePlaceholder"
+                                 th:unless="${producto.imagenUrl}"
+                                 src="/images/placeholder-product.png"
+                                 class="img-fluid"
+                                 alt="Sin imagen">        
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title" id="previewTitulo" th:text="${producto.descripcion}">Nombre del Producto</h5>
+                            <p class="card-text text-success fw-bold" id="previewPrecio" th:text="'₡' + ${producto.precio}">₡0.00</p>
+                            <a href="#" class="btn btn-primary" th:text="#{accion.añadir.carrito}">Añadir al Carrito</a>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-check mb-3">
-                        <input type="checkbox" id="activo" class="form-check-input" th:field="*{activo}">
-                        <label for="activo" class="form-check-label" th:text="#{producto.activo}">Activo</label>
-                    </div>
+                <div class="col-md-6">
+                    <div class="card p-4 shadow-sm">
+                        <!-- IMPORTANTE: multipart y CSRF -->
+                        <form th:action="@{/producto/guardar}" th:object="${producto}" method="POST" enctype="multipart/form-data">
+                            <!-- CSRF -->
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
-                    <div class="d-flex justify-content-between">
-                        <a th:href="@{/producto/listado}" class="btn btn-secondary" th:text="#{accion.regresar}">Regresar</a>
-                        <button type="submit" class="btn btn-primary" th:text="#{accion.guardar}">Guardar</button>
+                            <input type="hidden" th:field="*{idProducto}"/>
+                            <input type="hidden" th:field="*{imagenUrl}"/>
+
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label" th:text="#{producto.descripcion}">Descripción:</label>
+                                <input type="text" id="descripcion" class="form-control" th:field="*{descripcion}" required oninput="updatePreview()"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label" th:text="#{producto.categoria}">Categoría:</label>
+                                <select id="categoria" class="form-select" th:field="*{categoria}" required>
+                                    <option th:each="categoria : ${categorias}"
+                                            th:value="${categoria.idCategoria}"
+                                            th:text="${categoria.descripcion}"></option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="precio" class="form-label" th:text="#{producto.precio}">Precio:</label>
+                                <input type="number" id="precio" class="form-control" th:field="*{precio}" min="0.01" step="0.01" required oninput="updatePreview()"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="existencias" class="form-label" th:text="#{producto.existencias}">Existencias:</label>
+                                <input type="number" id="existencias" class="form-control" th:field="*{existencias}" min="0" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="imagen" class="form-label" th:text="#{producto.imagen}">Imagen:</label>
+                                <div class="input-group">
+                                    <!-- ⬇️ name alineado con el controlador (@RequestParam("archivo")) -->
+                                    <input type="file" id="imagen" name="archivo" accept="image/*" class="form-control" onchange="updateImagePreview(this)">
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input type="checkbox" id="activo" class="form-check-input" th:field="*{activo}">
+                                <label for="activo" class="form-check-label" th:text="#{producto.activo}">Activo</label>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/producto/listado}" class="btn btn-secondary" th:text="#{accion.regresar}">Regresar</a>
+                                <button type="submit" class="btn btn-primary" th:text="#{accion.guardar}">Guardar</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<footer th:replace="~{layout/plantilla :: footer}"/>
+        <footer th:replace="~{layout/plantilla :: footer}"/>
 
-<!-- pase este sctript en los js aqui me incomoda visualmente . mas tarde alf -->
- 
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    function updatePreview() {
-        const descripcion = document.getElementById('descripcion').value;
-        const precio = document.getElementById('precio').value;
-        document.getElementById('previewTitulo').textContent = descripcion || 'Nombre del Producto';
-        document.getElementById('previewPrecio').textContent = '₡' + (precio || '0.00');
-    }
+        <!-- pase este sctript en los js aqui me incomoda visualmente . mas tarde alf -->
 
-    function updateImagePreview(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const previewImage = document.getElementById('previewImage');
-                const placeholder = document.getElementById('previewImagePlaceholder');
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            function updatePreview() {
+                const descripcion = document.getElementById('descripcion').value;
+                const precio = document.getElementById('precio').value;
+                document.getElementById('previewTitulo').textContent = descripcion || 'Nombre del Producto';
+                document.getElementById('previewPrecio').textContent = '₡' + (precio || '0.00');
+            }
 
-                if (placeholder) {
-                    placeholder.remove();
+            function updateImagePreview(input) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const previewImage = document.getElementById('previewImage');
+                        const placeholder = document.getElementById('previewImagePlaceholder');
+
+                        if (placeholder) {
+                            placeholder.remove();
+                        }
+
+                        if (!previewImage) {
+                            const imgContainer = document.querySelector('.preview-img-container');
+                            const newImg = document.createElement('img');
+                            newImg.id = 'previewImage';
+                            newImg.className = 'img-fluid';
+                            newImg.alt = 'Vista previa de la imagen';
+                            imgContainer.appendChild(newImg);
+                            newImg.src = e.target.result;
+                        } else {
+                            previewImage.src = e.target.result;
+                        }
+                    };
+                    reader.readAsDataURL(input.files[0]);
                 }
+            }
+            /*]]>*/
+        </script>
 
-                if (!previewImage) {
-                    const imgContainer = document.querySelector('.preview-img-container');
-                    const newImg = document.createElement('img');
-                    newImg.id = 'previewImage';
-                    newImg.className = 'img-fluid';
-                    newImg.alt = 'Vista previa de la imagen';
-                    imgContainer.appendChild(newImg);
-                    newImg.src = e.target.result;
-                } else {
-                    previewImage.src = e.target.result;
-                }
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    /*]]>*/
-</script>
-
-</body>
+    </body>
 </html>
