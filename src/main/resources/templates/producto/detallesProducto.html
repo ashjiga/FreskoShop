@@ -56,7 +56,7 @@
                         </p>
                     </div>
                     <div class="mb-4">
-                        <p class="fw-bold">Descripción:</p>
+                        <p class="fw-bold">[[#{categoria.descripcion}]]:</p>
                         <p class="card-text" th:text="${producto.detalle}">Descripción detallada del producto...</p>
                     </div>
 
@@ -83,7 +83,7 @@
 
     <!-- Sección de Productos Relacionados -->
     <div class="container mt-5">
-        <h3 class="text-center mb-4">Productos Relacionados</h3>
+        <h3 class="text-center mb-4">[[#{productos.relacionados}]]</h3>
         <div class="row row-cols-1 row-cols-md-4 g-4 text-center">
             <div th:each="relacionado : ${productosRelacionados}" class="col">
                 <!-- Tarjeta clickeable (lleva al detalle) -->

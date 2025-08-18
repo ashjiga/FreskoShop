@@ -6,16 +6,7 @@
         <title>Fresko</title>
     </head>
     <body>
-        <header th:replace="~{layout/plantilla :: header}">
-            <nav class="nav justify-content-center my-3">
-                <a class="nav-link" href="/">Todos</a>
-                <a class="nav-link" href="/abarrotes">Abarrotes</a>
-                <a class="nav-link" href="/carnes">Carnes</a>
-                <a class="nav-link" href="/bebidas">Bebidas</a>
-                <a class="nav-link" href="/limpieza">Limpieza</a>
-                <a class="nav-link" href="/mascotas">Mascotas</a>
-            </nav>
-        </header>
+        <header th:replace="~{layout/plantilla :: header}"></header>
 
         <!-- Categorías -->
         <div class="container-fluid py-3 menu-categorias mt-3">
@@ -69,38 +60,40 @@
             </div>
         </div>
 
-        <!-- Visualización de Productos -->
+        <!-- Productos -->
         <div class="container mt-5">
-            <h2 class="text-center mb-4">Productos disponibles</h2>
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
+            <h2 class="text-center mb-4">[[#{index.nuestrosProductos}]]</h2>
 
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3">
                 <div class="col" th:each="producto : ${productos}">
                     <div class="card card-product position-relative h-100">
+
                         <!-- Tarjeta clickeable: imagen + cuerpo -->
-                        <a th:href="@{/producto/detalles/{id}(id=${producto.idProducto})}" class="text-reset text-decoration-none">
-                            <!-- IMPORTANTE: usar th:src con la URL directa -->
-                            <img th:src="${producto.imagenUrl}" class="card-img-top" th:alt="${producto.descripcion}" style="height: 200px; object-fit: cover;">
+                        <a th:href="@{/producto/detalles/{id}(id=${producto.idProducto})}"
+                           class="text-reset text-decoration-none">
+                            <img th:src="@{${producto.imagenUrl}}"
+                                 class="card-img-top imagen-producto"
+                                 th:alt="${producto.descripcion}">
                                 <div class="card-body p-2">
                                     <h6 class="card-title mb-1" th:text="${producto.descripcion}">Nombre</h6>
                                     <div class="small text-muted" th:text="'₡' + ${producto.precio}">₡0</div>
                                 </div>
                         </a>
 
+                        <!-- “Use one time”: si ya está en carrito, deshabilitar -->
                         <div class="mt-auto p-2">
-                            <!-- "Use one time": si ya está en carrito, deshabilitar -->
                             <div th:if="${idsProductosEnCarrito != null and idsProductosEnCarrito.contains(producto.idProducto)}">
-                                <button class="btn btn-success btn-block w-100" disabled>
-                                    Añadido al carrito!
+                                <button class="btn btn-success w-100" disabled>
+                                    [[#{carrito.add}]]
                                 </button>
                             </div>
                             <div th:unless="${idsProductosEnCarrito != null and idsProductosEnCarrito.contains(producto.idProducto)}">
-                                <!-- Añadir al carrito: POST, cantidad=1, con CSRF -->
-                                <form th:action="@{/carrito/agregar}" method="post" class="add-to-cart-form">
+                                <!-- Añadir al carrito: POST, cantidad=1 -->
+                                <form th:action="@{/carrito/agregar}" method="post">
                                     <input type="hidden" name="idProducto" th:value="${producto.idProducto}" />
                                     <input type="hidden" name="cantidad" value="1" />
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                                    <button type="submit" class="btn btn-success btn-block w-100 add-to-cart-btn"
-                                            th:data-id="${producto.idProducto}">
+                                    <button type="submit" class="btn btn-success w-100">
                                         <span class="btn-text">[[#{carrito.add}]]</span>
                                     </button>
                                 </form>
@@ -129,9 +122,9 @@
                                 <i class="fa-regular fa-heart"></i>
                             </a>
                         </div>
+
                     </div>
                 </div>
-
             </div>
         </div>
 
