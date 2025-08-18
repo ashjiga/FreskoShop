@@ -7,7 +7,7 @@
         <header th:replace="~{layout/plantilla::header}"></header>
 
         <section id="seccion-carrito" class="container mt-4">
-            <h2 class="mb-4 text-center">Mi Carrito</h2>
+            <h2 class="mb-4 text-center">[[#{plantilla.carrito}]]</h2>
             <div th:if="${carrito != null and !carrito.empty}">
                 
                 
@@ -50,7 +50,7 @@
                         data-target="seccion-carrito" 
                         th:data-id-producto="${item.producto.idProducto}"
                         >
-                        <i class="bi bi-trash"></i> Eliminar
+                        <i class="bi bi-trash"></i> [[#{accion.eliminar}]]
                     </button>
                 </div>
             </div>
@@ -59,14 +59,14 @@
 </div>
 
                 <div class="d-flex justify-content-between">
-                    <a th:href="@{/}" class="btn btn-secondary">Seguir Comprando</a>
-                    <a th:href="@{/carrito/checkout}" class="btn btn-success">Finalizar Compra</a>
+                    <a th:href="@{/}" class="btn btn-secondary">[[#{carrito.seguirComprando}]]</a>
+                    <a th:href="@{/carrito/checkout}" class="btn btn-success">[[#{carrito.comprar}]]</a>
                 </div>
                 
                 
     </div>
     <div th:if="${carrito == null or carrito.empty}" class="alert alert-info text-center">
-        Tu carrito está vacío. <a th:href="@{/}">¡Empieza a comprar!</a>
+        [[#{carrito.vacio}]] <a th:href="@{/}">[[#{empieza.comprar}]]</a>
     </div>
         </section>
 
