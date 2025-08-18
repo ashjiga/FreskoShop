@@ -104,7 +104,7 @@ CREATE TABLE request_matcher (
 CREATE TABLE request_matcher_all (
   id_request_matcher INT AUTO_INCREMENT PRIMARY KEY,
   pattern VARCHAR(255) NOT NULL
-);id_rol
+);
 
 -- Registro de intentos de login
 CREATE TABLE login_log (
@@ -113,14 +113,10 @@ CREATE TABLE login_log (
   fecha DATETIME NOT NULL,
   exito BOOLEAN,
   FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
-);login_log
-
-ALTER TABLE usuario ADD rol VARCHAR(20) NOT NULL DEFAULT 'CLIENTE';
-
+);
 
 -- Querys para añadir informacion e imagenes importantes - RECALCO ES IMPORTANTE!!! jaja (hay imagenes de las secciones del index)
 USE fresko;
-
 
 INSERT INTO categoria (descripcion, ruta_imagen, activo) VALUES
 ('Abarrotes', 'https://imgur.com/r1tPOdO', true),
@@ -138,17 +134,22 @@ INSERT INTO producto (id_categoria, descripcion, detalle, precio, existencias, r
 
 -- Usuario con rol USER (puede agregar favoritos el pass de usuario1 es "usuario123")
 INSERT INTO usuario (username, password, nombre, apellidos, correo, telefono, ruta_imagen, activo, rol)
-VALUES ('usuario1', '$2a$10$wH3MeHf5czjcD82vJWfvS.1FNhI.3U9aFo8U0iEkGp5FfbKAdASuG', 'Carlos', 'Fernández', 'carlos@correo.com', '8888-8888', '/img/user1.png', true, 'ROLE_CLIENTE');
+VALUES ('usuario1', '{bcrypt}$2a$10$wH3MeHf5czjcD82vJWfvS.1FNhI.3U9aFo8U0iEkGp5FfbKAdASuG', 'Carlos', 'Fernández', 
+'carlos@correo.com', '8888-8888', '/img/user1.png', true, 'ROLE_CLIENTE');
 
 -- Asignación de rol USER
 INSERT INTO rol (nombre, id_usuario) VALUES ('ROLE_USER', 1);
 
 INSERT INTO favorito (id_usuario, id_producto) VALUES
-(1, 1), -- Arroz
-(1, 3), -- Refresco
-(1, 5); -- Alimento perro
+(1, 1),
+(1, 3),
+(1, 5);
 
+-- Usuario con rol ADMIN (el pass de admin es "admin123")
+INSERT INTO usuario (username, password, nombre, apellidos, correo, telefono, ruta_imagen, activo, rol)
+VALUES ('admin', '{bcrypt}$2a$10$7d8eSdrfrf1Nq6tQYZ9TeOOjCjE1g6yJWsg0NfToXQxwQ8YoV8M5y', 'Admin', 'Principal',
+'admin@fresko.com', '9999-9999', '/img/admin.png', true, 'ROLE_ADMIN');
 
-
-
+-- Asignación de rol ADMIN
+INSERT INTO rol (nombre, id_usuario) VALUES ('ROLE_ADMIN', 2);
 

@@ -20,7 +20,7 @@ public class LoginSuccessListener {
     @EventListener
     public void handleLoginSuccess(AuthenticationSuccessEvent event) {
         String username = event.getAuthentication().getName();
-        Usuario usuario = usuarioService.getUsuarioPorUsername(username); // este método debes tenerlo
+        Usuario usuario = usuarioService.getUsuarioPorUsername(username); 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         HttpSession session = request.getSession();
         session.setAttribute("usuario", usuario);
