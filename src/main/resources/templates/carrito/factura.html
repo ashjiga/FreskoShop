@@ -26,11 +26,11 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h3 th:text="${tienda}">FreskoShop</h3>
-                            <div th:text="'Cliente: ' + ${cliente}">Cliente: -</div>
+                            <div th:text="#{usuario.cliente} + ': ' + ${cliente}">Cliente: -</div>
                         </div>
                         <div class="text-end">
-                            <div th:text="'Fecha/hora: ' + ${#temporals.format(fecha, 'dd/MM/yyyy HH:mm')}">Fecha</div>
-                            <div>Factura</div>
+                            <div th:text="#{factura.fecha} + ': ' + ${#temporals.format(fecha, 'dd/MM/yyyy HH:mm')}">Fecha</div>
+                            <div>[[#{plantilla.factura}]]</div>
                         </div>
                     </div>
 
@@ -40,15 +40,15 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Producto</th>
-                                    <th class="text-center">Cant.</th>
-                                    <th class="text-end">Precio</th>
-                                    <th class="text-end">Total</th>
+                                    <th>[[#{producto.titulo}]]</th>
+                                    <th class="text-center">[[#{carrito.cantidad}]]</th>
+                                    <th class="text-end">[[#{producto.precio}]]</th>
+                                    <th class="text-end">[[#{carrito.total}]]</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="it : ${items}">
-                                    <td th:text="${it.descripcion}">Producto</td>
+                                    <td th:text="${it.descripcion}">[[#{producto.titulo}]]</td>
                                     <td class="text-center" th:text="${it.cantidad}">1</td>
                                     <td class="text-end" th:text="'₡' + ${#numbers.formatDecimal(it.precio,0,'POINT',2,'COMMA')}">₡0,00</td>
                                     <td class="text-end" th:text="'₡' + ${#numbers.formatDecimal(it.total,0,'POINT',2,'COMMA')}">₡0,00</td>
@@ -56,26 +56,26 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="3" class="text-end">Subtotal</th>
+                                    <th colspan="3" class="text-end">[[#{facturacion.subtotal}]]</th>
                                     <th class="text-end" th:text="'₡' + ${#numbers.formatDecimal(subtotal,0,'POINT',2,'COMMA')}">₡0,00</th>
                                 </tr>
                                 <tr>
-                                    <th colspan="3" class="text-end">Impuestos (13%)</th>
+                                    <th colspan="3" class="text-end">[[#{facturacion.impuestos}]] (13%)</th>
                                     <th class="text-end" th:text="'₡' + ${#numbers.formatDecimal(impuestos,0,'POINT',2,'COMMA')}">₡0,00</th>
                                 </tr>
                                 <tr>
-                                    <th colspan="3" class="text-end">TOTAL</th>
+                                    <th colspan="3" class="text-end">[[#{facturacion.total}]]</th>
                                     <th class="text-end text-success" th:text="'₡' + ${#numbers.formatDecimal(total,0,'POINT',2,'COMMA')}">₡0,00</th>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
 
-                    <p class="mt-4 text-center">¡Gracias por su compra!</p>
+                    <p class="mt-4 text-center">[[#{mensaje.gracias}]]</p>
 
                     <div class="d-flex justify-content-center gap-2 no-print">
-                        <button class="btn btn-success" onclick="window.print()">Imprimir / Guardar PDF</button>
-                        <a th:href="@{/}" class="btn btn-outline-secondary">Volver al Inicio</a>
+                        <button class="btn btn-success" onclick="window.print()">[[#{guardar.pdf}]]</button>
+                        <a th:href="@{/}" class="btn btn-outline-secondary">[[#{accion.volver.inicio}]]</a>
                     </div>
                 </div>
             </div>

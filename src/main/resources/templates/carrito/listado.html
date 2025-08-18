@@ -86,7 +86,7 @@
 
             <!-- Carrito vacío -->
             <div th:if="${carrito == null or carrito.empty}" class="alert alert-info text-center">
-                [[#{carrito.vacio}]] <a th:href="@{/}">¡Empieza a comprar!</a>
+                [[#{carrito.vacio}]] <a th:href="@{/}">[[#{empieza.comprar}]]</a>
             </div>
         </section>
 
